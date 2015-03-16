@@ -1,0 +1,55 @@
+/*
+ * Analyseur syntaxique
+ *
+ */ 
+package fr.ul.miage.projet.generated;
+import java_cup.runtime.Symbol;
+
+/* contrôle des erreurs de syntaxe : surcharge */
+parser code {:
+	public void syntax_error(Symbol cur_token){}
+	public void unrecovered_syntax_error(Symbol cur_token) throws Exception{
+		throw new Exception("Erreur");
+	}
+:}
+
+/*action code*/
+action code {:
+	
+:}
+
+/* la grammaire */
+
+terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE, RL;
+terminal INT, VOID;
+
+non terminal x;
+non terminal prog, type, data, contenudata, declaration;
+
+
+start with x;
+
+/*------debut-------*/
+
+
+x ::= prog
+		;
+
+prog ::= data | prog data
+		;
+
+data ::= type contenudata POINTVIRGULE RL
+		;
+
+contenudata ::= declaration | contenudata VIRGULE declaration
+			;
+
+declaration ::= IDF | IDF EGAL NOMBRE
+			;
+
+type ::= INT
+		| VOID
+		;
+
+/*------fin--------*/
+

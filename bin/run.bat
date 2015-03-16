@@ -24,7 +24,7 @@ set LIB_DIR=%PROJ_HOME%\lib
 set CLASSES_DIR=%PROJ_HOME%\build\classes
 
 :: --->4) the name of class to launch
-set CLASS_NAME=fr.ul.miage.exemple.Main
+set CLASS_NAME=fr.ul.miage.projet.Main
 
 :: -->5) extra parameters
 set PARAMS=
