@@ -21,10 +21,10 @@ action code {:
 /* la grammaire */
 
 terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE, RL;
-terminal INT, VOID;
+terminal INT, VOID, TEST;
 
 non terminal x;
-non terminal prog, type, data, contenudata, declaration;
+non terminal prog, type, data, contenudata, declaration, codes;
 
 
 start with x;
@@ -35,7 +35,7 @@ start with x;
 x ::= prog
 		;
 
-prog ::= data | prog data
+prog ::= data | prog data | codes | prog codes
 		;
 
 data ::= type contenudata POINTVIRGULE RL
@@ -49,6 +49,9 @@ declaration ::= IDF | IDF EGAL NOMBRE
 
 type ::= INT
 		| VOID
+		;
+		
+codes ::= TEST
 		;
 
 /*------fin--------*/

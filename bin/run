@@ -23,7 +23,7 @@ CLASSES_DIR="$PROJ_HOME/build/classes"
 
 
 # --->4) the name of class to launch
-CLASS_NAME=fr.ul.miage.log.Main
+CLASS_NAME=fr.ul.miage.projet.Main
 
 # -->5) extra paramaters of the command
 PARAMS=""
