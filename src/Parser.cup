@@ -22,9 +22,11 @@ action code {:
 
 terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE, RL;
 terminal INT, VOID, TEST;
+terminal PG, PD, AG, AD;
 
 non terminal x;
-non terminal prog, type, data, contenudata, declaration, codes;
+non terminal prog, type, data, contenudata, declaration;
+non terminal codes, fonction, parametres, corpsFonction;
 
 
 start with x;
@@ -35,7 +37,7 @@ start with x;
 x ::= prog
 		;
 
-prog ::= data | prog data | codes | prog codes
+prog ::= data | prog data | codes
 		;
 
 data ::= type contenudata POINTVIRGULE RL
@@ -46,12 +48,21 @@ contenudata ::= declaration | contenudata VIRGULE declaration
 
 declaration ::= IDF | IDF EGAL NOMBRE
 			;
+		
+codes ::= fonction | codes fonction
+		;
+	
+fonction ::= IDF PG parametres PD AG corpsFonction AD
+			;
+		
+parametres ::= TEST
+			;
 
+corpsFonction ::= TEST
+				;
+			
 type ::= INT
 		| VOID
-		;
-		
-codes ::= TEST
 		;
 
 /*------fin--------*/
