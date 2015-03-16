@@ -1,0 +1,11 @@
+95.108.240.252 - - [16/Jun/2013:06:27:42 +0200] "GET /front/document/0a1c74df/f35d/44cb/0a1c74df-f35d-44cb-945b-c4a9610dd196.jpeg HTTP/1.1" 200 45690
+66.249.72.202 - - [16/Jun/2013:06:31:04 +0200] "GET /front/documents/pdf/cession_droits_auteur.pdf HTTP/1.1" 304 190
+66.249.72.202 - - [16/Jun/2013:06:33:13 +0200] "GET /front/notice?id=380c82dc-9a80-4de0-b2a3-a9074f53bb77 HTTP/1.1" 200 9363
+95.108.240.252 - - [16/Jun/2013:06:33:17 +0200] "GET /front/document/6563e60d/58ef/4fa2/6563e60d-58ef-4fa2-9bb3-78c6d7dfb895.jpeg HTTP/1.1" 200 52195
+189.203.203.93 - - [16/Jun/2013:06:34:41 +0200] "GET /front/notice?id=22f18637-6794-484c-a7aa-d5002839e8b8 HTTP/1.1" 200 9317
+189.203.203.93 - - [16/Jun/2013:06:34:42 +0200] "GET /front/proxy/uoh-logos/RENNES_2 HTTP/1.1" 304 221
+95.108.240.252 - - [16/Jun/2013:06:34:42 +0200] "GET /front/document/02bf0607/f537/495b/02bf0607-f537-495b-90f2-73633c794d35.jpeg HTTP/1.1" 200 40797
+189.203.203.93 - - [16/Jun/2013:06:34:42 +0200] "GET /front/res/css/ui-lightness/images/ui-bg_gloss-wave_35_f6a828_500x100.png HTTP/1.1" 200 4074
+189.203.203.93 - - [16/Jun/2013:06:34:42 +0200] "GET /front/res/css/ui-lightness/images/ui-icons_ffffff_256x240.png HTTP/1.1" 200 4682
+189.203.203.93 - - [16/Jun/2013:06:34:43 +0200] "GET /front/res/ckeditor/skins/kama/images/sprites.png HTTP/1.1" 200 7398
+123.125.71.101 - - [16/Jun/2013:06:37:31 +0200] "GET / HTTP/1.1" 302 517
