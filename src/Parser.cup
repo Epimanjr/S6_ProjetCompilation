@@ -26,7 +26,7 @@ terminal PG, PD, AG, AD;
 
 non terminal x;
 non terminal prog, type, data, contenudata, declaration;
-non terminal codes, fonction, parametres, corpsFonction;
+non terminal codes, fonction, argument, corpsFonction;
 
 
 start with x;
@@ -50,12 +50,12 @@ declaration ::= IDF | IDF EGAL NOMBRE
 			;
 		
 codes ::= fonction | codes fonction
-		;
+		; 
 	
-fonction ::= IDF PG parametres PD AG corpsFonction AD
+fonction ::= IDF PG argument PD AG AD
 			;
 		
-parametres ::= TEST
+argument ::= type IDF
 			;
 
 corpsFonction ::= TEST

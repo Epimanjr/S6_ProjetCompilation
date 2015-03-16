@@ -1,2 +1,1 @@
-int j, i=0;
-int i;
+fonction(int j){}
