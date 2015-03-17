@@ -25,13 +25,13 @@ terminal INT, VOID;
 terminal PG, PD, AG, AD;
 terminal PLUS, MOINS, FOIS, DIVISE;
 terminal RET;
-terminal IF, ELSE, PPQ, PPE, PGQ, PGE, VRAI, FAUX;
+terminal IF, ELSE, WHILE, PPQ, PPE, PGQ, PGE, VRAI, FAUX;
 
 non terminal x;
 non terminal prog, type, datas, data, contenudata, declaration;
 non terminal codes, fonction, parametres, parametresCall, argument, block, contenuBlock;
 non terminal instruction, affectation, expression, valeur, operateur, call, instrReturn;
-non terminal condition, booleen, operateurBooleen, exprBooleen;
+non terminal condition, booleen, operateurBooleen, exprBooleen, iteration;
 
 
 start with x;
@@ -77,10 +77,14 @@ instruction ::= affectation
 			| instrReturn
 			| call
 			| condition
+			| iteration
 			;
 
 condition ::= IF PG booleen PD block
 			| IF PG booleen PD block ELSE block
+			;
+
+iteration ::= WHILE PG booleen PD block
 			;
 
 booleen ::= VRAI
@@ -116,6 +120,7 @@ expression ::= valeur
 
 parametres ::= argument 
 			| parametres VIRGULE argument
+			| call
 			;
 
 parametresCall ::= expression | parametresCall VIRGULE expression

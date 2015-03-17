@@ -48,6 +48,7 @@ RLTAB   =   "\n"|"\r\n"|"\t"
 "else"		{ return new Symbol(ParserSym.ELSE);}
 "true"		{ return new Symbol(ParserSym.VRAI);}
 "false"		{ return new Symbol(ParserSym.FAUX);}
+"while"		{ return new Symbol(ParserSym.WHILE);}
 ">"			{ return new Symbol(ParserSym.PGQ);}
 ">="		{ return new Symbol(ParserSym.PGE);}
 "<"			{ return new Symbol(ParserSym.PPQ);}
