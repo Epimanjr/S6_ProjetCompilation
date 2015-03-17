@@ -75,7 +75,7 @@ contenuBlock ::= instruction
 instruction ::= affectation 
 			| data
 			| instrReturn
-			| call
+			| expression POINTVIRGULE
 			| condition
 			| iteration
 			;
@@ -120,7 +120,7 @@ expression ::= valeur
 
 parametres ::= argument 
 			| parametres VIRGULE argument
-			| call
+			| expression
 			;
 
 parametresCall ::= expression 
