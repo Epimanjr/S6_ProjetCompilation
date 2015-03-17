@@ -28,7 +28,7 @@ terminal RET;
 
 non terminal x;
 non terminal prog, type, datas, data, contenudata, declaration;
-non terminal codes, fonction, argument, block, contenuBlock;
+non terminal codes, fonction, parametres, parametresCall, argument, block, contenuBlock;
 non terminal instruction, affectation, expression, valeur, operateur, call, instrReturn;
 
 
@@ -58,7 +58,7 @@ declaration ::= IDF | IDF EGAL NOMBRE
 codes ::= fonction | codes fonction
 		; 
 	
-fonction ::= type IDF PG argument PD block | IDF PG argument PD block
+fonction ::= type IDF PG parametres PD block | IDF PG parametres PD block
 			;
 
 block ::= AG contenuBlock AD
@@ -87,7 +87,7 @@ valeur ::= NOMBRE
 		| call
 		;
 
-call ::= IDF PG argument PD
+call ::= IDF PG parametresCall PD
 		;
 
 expression ::= valeur
@@ -96,6 +96,14 @@ expression ::= valeur
 			| PG valeur operateur expression PD operateur expression
 			;
 
+
+parametres ::= argument 
+			| parametres VIRGULE argument
+			;
+
+parametresCall ::= expression | parametresCall VIRGULE expression
+				| /* EMPTY */
+				;
 
 argument ::= type IDF 
 			| /* EMPTY */
