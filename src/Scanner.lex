@@ -44,6 +44,14 @@ RLTAB   =   "\n"|"\r\n"|"\t"
 "int"		{ return new Symbol(ParserSym.INT);}
 "void"		{ return new Symbol(ParserSym.VOID);}
 "return"	{ return new Symbol(ParserSym.RET);}
+"if"		{ return new Symbol(ParserSym.IF);}
+"else"		{ return new Symbol(ParserSym.ELSE);}
+"true"		{ return new Symbol(ParserSym.VRAI);}
+"false"		{ return new Symbol(ParserSym.FAUX);}
+">"			{ return new Symbol(ParserSym.PGQ);}
+">="		{ return new Symbol(ParserSym.PGE);}
+"<"			{ return new Symbol(ParserSym.PPQ);}
+"<="		{ return new Symbol(ParserSym.PPE);}
 "("			{ return new Symbol(ParserSym.PG);}
 ")"			{ return new Symbol(ParserSym.PD);}
 "{"			{ return new Symbol(ParserSym.AG);}
