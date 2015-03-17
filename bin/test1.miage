@@ -1,1 +1,5 @@
-fonction(int j){}
+int i;
+
+void fonction(int j) {
+	
+}

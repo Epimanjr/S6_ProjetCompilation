@@ -20,13 +20,16 @@ action code {:
 
 /* la grammaire */
 
-terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE, RL;
-terminal INT, VOID, TEST;
+terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE;
+terminal INT, VOID;
 terminal PG, PD, AG, AD;
+terminal PLUS, MOINS, FOIS, DIVISE;
+terminal RET;
 
 non terminal x;
-non terminal prog, type, data, contenudata, declaration;
-non terminal codes, fonction, argument, corpsFonction;
+non terminal prog, type, datas, data, contenudata, declaration;
+non terminal codes, fonction, argument, block, contenuBlock;
+non terminal instruction, affectation, expression, valeur, operateur, call, instrReturn;
 
 
 start with x;
@@ -37,10 +40,13 @@ start with x;
 x ::= prog
 		;
 
-prog ::= data | prog data | codes
+prog ::= datas | datas codes | codes
 		;
 
-data ::= type contenudata POINTVIRGULE RL
+datas ::= data | datas data
+		;
+
+data ::= type contenudata POINTVIRGULE
 		;
 
 contenudata ::= declaration | contenudata VIRGULE declaration
@@ -52,18 +58,58 @@ declaration ::= IDF | IDF EGAL NOMBRE
 codes ::= fonction | codes fonction
 		; 
 	
-fonction ::= IDF PG argument PD AG AD
-			;
-		
-argument ::= type IDF
+fonction ::= type IDF PG argument PD block | IDF PG argument PD block
 			;
 
-corpsFonction ::= TEST
+block ::= AG contenuBlock AD
+		| AG AD
+		;
+
+contenuBlock ::= instruction 
+				| contenuBlock instruction
 				;
+
+instruction ::= affectation 
+			| data
+			| instrReturn
+			| call
+			;
+
+instrReturn ::= RET expression POINTVIRGULE
+			| RET POINTVIRGULE
+			;
+
+affectation ::= IDF EGAL expression POINTVIRGULE
+			;
+
+valeur ::= NOMBRE	
+		| IDF
+		| call
+		;
+
+call ::= IDF PG argument PD
+		;
+
+expression ::= valeur
+			| valeur operateur expression
+			| PG valeur operateur expression PD
+			| PG valeur operateur expression PD operateur expression
+			;
+
+
+argument ::= type IDF 
+			| /* EMPTY */
+			;
 			
 type ::= INT
 		| VOID
 		;
+
+operateur ::= PLUS
+			| MOINS
+			| FOIS
+			| DIVISE
+			;
 
 /*------fin--------*/
 

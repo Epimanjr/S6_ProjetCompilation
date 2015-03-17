@@ -24,7 +24,7 @@ public class Main {
 		FileReader file;
 		
 		try {
-			file = new FileReader("test1.miage");
+			file = new FileReader(args[0]);
 			
 			
 			
