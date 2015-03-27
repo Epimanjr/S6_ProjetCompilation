@@ -3,7 +3,6 @@
  * La lecture du flux de caractère se fait sur l'entrée standard
  */
 package fr.ul.miage.projet;
-
 import fr.ul.miage.projet.generated.ParserCup;
 import fr.ul.miage.projet.generated.Yylex;
 
