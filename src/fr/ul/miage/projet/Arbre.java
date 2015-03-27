@@ -4,10 +4,7 @@
  *      -> Spliter la chaîne correctement
  *      -> Et générer l'arbre syntaxique correspondant.
  */
-package arbre;
-
-import static arbre.InterpreterArbre.interpreterArbreSyntaxique;
-import exception.SyntaxErrorException;
+package fr.ul.miage.projet;
 
 /**
  * 
@@ -41,16 +38,6 @@ public class Arbre {
         System.out.println("*** DEBUT DE L'ARBRE ***");
         afficherNoeud(this.racine, 0);
         System.out.println("*** FIN DE L'ARBRE ***");
-    }
-    
-    /**
-     * Interprétation de l'arbre
-     * @throws exception.SyntaxErrorException
-     */
-    public String interpreterArbre() throws SyntaxErrorException {
-        String res = "";
-        res = interpreterArbreSyntaxique(this);
-        return res;
     }
 
     /**

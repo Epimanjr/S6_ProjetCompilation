@@ -6,7 +6,7 @@ package fr.ul.miage.projet;
 public class Variable {
 
 	/**
-	 * Identificateur de la variable
+	 * Identificateur de la Variable
 	 */
 	private String idf;
 	

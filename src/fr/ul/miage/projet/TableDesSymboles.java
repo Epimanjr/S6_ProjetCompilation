@@ -12,7 +12,7 @@ public class TableDesSymboles {
 	private HashMap<Variable, HashMap<String, String>> tds;
 
 	/**
-	 * Constructeur d'une tds vide
+	 * Constructeur d'une TDS vide
 	 */
 	public TableDesSymboles() {
 		super();
