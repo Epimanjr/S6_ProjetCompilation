@@ -31,10 +31,15 @@ public class TableDesSymboles {
 	/**
 	 * Méthode de recherche
 	 */
-	public HashMap<String, String> rechercher(String idf, int scope) {
-		//TODO
+	public HashMap<String, String> rechercher(String idf, int scope,Variable var) {
+		for (Variable v:tds.keySet()){
+			if(v==var){
+				return tds.get(var);
+			}
+		}
 		return null;
 	}
+	
 	
 	/**
 	 * Méthode d'insertion d'une variables globales
