@@ -44,14 +44,32 @@ public class TableDesSymboles {
 	/**
 	 * Méthode d'insertion d'une variables globales
 	 */
-	public void insertion(String idf, int scope, String type, int val) {
-		//TODO
+	public void insertion(String idf, int scope, String type, String val) {
+		HashMap<String, String> caracteristiques = new HashMap<String, String>();
+		
+		caracteristiques.put("type", type);
+		caracteristiques.put("valeur", val);
+		
+		this.tds.put(new Variable(idf, scope), caracteristiques);
 	}
 	
 	/**
-	 * Méthode d'insertion ...
+	 * Méthode d'insertion d'une fonction
 	 */
-	//TODO
+	public void insertion(String idf, int scope, String type, String[] typeparams, String[] nomparams) {
+		HashMap<String, String> caracteristiques = new HashMap<String, String>();
+		
+		caracteristiques.put("type", type);
+		
+		if (typeparams.length == nomparams.length) {
+			for (int i = 0; i < typeparams.length; i++) {
+				caracteristiques.put("typeparam_" + String.valueOf(i+1), typeparams[i]);
+				caracteristiques.put("nomparam_" + String.valueOf(i+1), nomparams[i]);
+			}
+		}
+		
+		this.tds.put(new Variable(idf, scope), caracteristiques);
+	}
 	
 	/**
 	 * @return the tds
