@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 public class Noeud {
 
+	/**
+	 * Le type du noeud
+	 */
+	private String type;
+
     /**
      * Valeur du Noeud.
      */
@@ -62,6 +67,24 @@ public class Noeud {
      */
     public String getValeur() {
         return valeur;
+    }
+
+    /**
+     * Récupère le type du Noeud.
+     *
+     * @return type String
+     */
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * Permet de modifier le type du Noeud.
+     *
+     * @param type String
+     */
+    public void setType(String type) {
+    	this.type = type;
     }
 
     /**
