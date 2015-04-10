@@ -26,7 +26,19 @@ public class Noeud {
      */
     private Noeud noeudPere = null;
 
+    
+    static String PLUS = "+";
+    static String MOINS = "-";
+    static String FOIS = "*";
+    static String DIVISE = "/";
+    static String PPQ = "<";
+    static String PPE = "<=";
+    static String PGQ = ">";
+    static String PGE = ">=";
+    
     /**
+     * 
+     * 
      * Construit un Noeud à partir de sa valeur (donné en paramètre)
      *
      * @param valeur La valeur du Noeud.
