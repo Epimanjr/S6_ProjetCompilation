@@ -1,0 +1,168 @@
+/*
+ * Analyseur syntaxique
+ *
+ */ 
+package fr.ul.miage.projet.generated;
+import java_cup.runtime.Symbol;
+
+/* Contrôle des erreurs de syntaxe : surcharge */
+parser code {:
+	public void syntax_error(Symbol cur_token){}
+	public void unrecovered_syntax_error(Symbol cur_token) throws Exception{
+		throw new Exception("Erreur");
+	}
+:}
+
+/* Action code */
+action code {:
+	
+:}
+
+/* La grammaire */
+
+terminal VRAI, FAUX, NOMBRE, IDF;		/* Atomes */
+terminal INT, VOID;						/* Types */
+terminal EGAL, VIRGULE, POINTVIRGULE;	/* Ponctuation */
+terminal PG, PD, AG, AD;
+terminal PLUS, MOINS;					/* Opérateurs */
+terminal FOIS, DIVISE;
+terminal PPQ, PPE, PGQ, PGE;
+terminal IF, ELSE, WHILE;				/* Noms réservés */
+terminal RET;
+
+non terminal prog;
+non terminal seq_commandes, commande;
+non terminal seq_fonctions, fonction, bloc;
+non terminal seq_instructions, instruction;
+non terminal declaration, multiDeclaration, affectation;
+non terminal condition, iteration, expr_booleen, booleen;
+non terminal appel_fonction, parametres, param_appel, argument, retour;
+non terminal expression, facteur, atome, type;
+non terminal op_secondaire, op_prioritaire, op_booleen;
+
+
+start with prog;
+
+/*------debut-------*/
+
+/* NB: une séquence est une suite de quelque chose */
+
+prog ::= seq_commandes
+		;
+		
+seq_commandes ::= commande seq_commandes
+				| /* VIDE */
+				;
+		
+commande ::= seq_instructions
+			| seq_fonctions
+			;
+		
+seq_fonctions ::= fonction
+			| seq_fonctions fonction
+			;
+			
+fonction ::= type IDF PG parametres PD bloc
+		| IDF PG parametres PD bloc
+		;
+			
+bloc ::= AG AD
+		| AG seq_instructions AD
+		;
+
+seq_instructions ::= instruction
+				| seq_instructions instruction
+				;
+		
+instruction ::= declaration POINTVIRGULE
+			| affectation POINTVIRGULE
+			| condition
+			| iteration
+			| appel_fonction POINTVIRGULE
+			| retour POINTVIRGULE
+			;
+
+declaration ::= type IDF
+			| type IDF EGAL NOMBRE
+			| type IDF VIRGULE multiDeclaration
+			;
+
+/* Déclarations multiples (int i, j, k( = 0| = a);) */
+multiDeclaration ::= IDF
+				| IDF EGAL expression
+				| IDF VIRGULE multiDeclaration
+				;
+				
+affectation ::= IDF EGAL expression
+			;
+			
+condition ::= IF PG expr_booleen PD bloc
+			| IF PG expr_booleen PD bloc ELSE bloc
+			;
+
+iteration ::= WHILE PG expr_booleen PD bloc
+			;
+			
+expr_booleen ::= booleen
+			| NOT expr_booleen
+			| expression op_booleen expression
+			;
+
+booleen ::= VRAI
+		| FAUX
+		;
+		
+appel_fonction ::= IDF PG param_appel PD
+				;
+				
+parametres ::= argument
+			| parametres VIRGULE argument
+			| appel_fonction
+			;
+
+param_appel ::= expression 
+			| param_appel VIRGULE expression
+			| /* VIDE */
+			;
+			
+argument ::= type IDF 
+		| /* VIDE */
+		;
+			
+retour ::= RET expression
+		| RET
+		;
+		
+expression ::= expression op_secondaire facteur
+			| facteur
+			;
+			
+facteur ::= facteur op_prioritaire atome
+		| atome
+		| appel_fonction
+		;
+		
+atome ::= NOMBRE
+		| IDF
+		| PG expression PD
+
+type ::= INT
+	   | VOID
+	   ;
+	   
+op_secondaire ::= PLUS		{: RESULT = Noeud.PLUS; :}
+				| MOINS		{: RESULT = Noeud.MOINS; :}
+				;
+			
+op_prioritaire ::= FOIS		{: RESULT = Noeud.FOIS; :}
+				| DIVISE	{: RESULT = Noeud.DIVISE; :}
+				;
+			
+op_booleen ::= PPQ	{: RESULT = Noeud.PPQ; :}
+			| PPE	{: RESULT = Noeud.PPE; :}
+			| PGQ	{: RESULT = Noeud.PGQ; :}
+			| PGE	{: RESULT = Noeud.PGE; :}
+			;
+
+/*------fin--------*/
+
