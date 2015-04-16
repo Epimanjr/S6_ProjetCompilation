@@ -61,6 +61,7 @@ RLTAB		=   "\n"|"\r\n"|"\t"
 "if"		{ return new Symbol(ParserSym.IF);}		/* Noms réservés */
 "else"		{ return new Symbol(ParserSym.ELSE);}
 "while"		{ return new Symbol(ParserSym.WHILE);}
+"not"		{ return new Symbol(ParserSym.NOT);}
 "return"	{ return new Symbol(ParserSym.RET);}
 " "			{ ; }
 {NOMBRE}	{ return new Symbol(ParserSym.NOMBRE);}
