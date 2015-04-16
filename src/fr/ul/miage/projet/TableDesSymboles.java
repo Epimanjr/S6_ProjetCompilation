@@ -5,7 +5,9 @@ package fr.ul.miage.projet;
 import java.util.HashMap;
 
 public class TableDesSymboles {
-
+	String Scope="global";
+	int rang_loc=0;
+	int rang_arg=0;
 	/**
 	 * A chaque variable, on associe ses caractéristiques (stockées dans une hashmap)
 	 */
@@ -31,7 +33,7 @@ public class TableDesSymboles {
 	/**
 	 * Méthode de recherche
 	 */
-	public HashMap<String, String> rechercher(String idf, int scope,Variable var) {
+	public HashMap<String, String> rechercher(Variable var) {
 		for (Variable v:tds.keySet()){
 			if(v==var){
 				return tds.get(var);
@@ -51,6 +53,31 @@ public class TableDesSymboles {
 		caracteristiques.put("valeur", val);
 		
 		this.tds.put(new Variable(idf, scope), caracteristiques);
+	}
+	/**
+	 * Méthode d'insertion d'une variable locale ou argument
+	 */
+	public void insertion(String idf, int scope, String type, String val,String rang) {
+		HashMap<String, String> caracteristiques = new HashMap<String, String>();
+		
+		caracteristiques.put("type", type);
+		caracteristiques.put("valeur", val);
+		caracteristiques.put("rang", rang);
+
+		this.tds.put(new Variable(idf, scope), caracteristiques);
+	}
+	/**
+	 * Méthode de renitialisation du nombre d'arguments, du nombre de variable local et 
+	 * mise à jour de la fonction
+	 */
+	public void setArg_Loc(String idf){
+		HashMap<String, String> caracteristiques = new HashMap<String, String>();
+		caracteristiques.put("nombre_argument",""+rang_arg+"");
+		caracteristiques.put("nombre_local",""+ rang_loc+"");
+		rang_loc=0;
+		rang_arg=0;
+		this.tds.put(new Variable(idf, 0), caracteristiques);
+
 	}
 	
 	/**

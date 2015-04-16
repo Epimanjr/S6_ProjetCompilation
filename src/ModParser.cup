@@ -15,14 +15,16 @@ parser code {:
 
 /* Action code */
 action code {:
-	
+	String Scope=0; /* 0 correspond Ã  global*/
+	int rang_loc=0;
+	int rang_arg=0;
 :}
 
 /* La grammaire */
 
 terminal VRAI, FAUX, NOMBRE, IDF;		/* Atomes */
 terminal INT, VOID;						/* Types */
-terminal EGAL, VIRGULE, POINTVIRGULE;	/* Ponctuation */
+terminal EGAL, VIRGULE, POINTVIRGULE,PV,AO,AF,PO,PF;	/* Ponctuation */
 terminal PG, PD, AG, AD;
 terminal PLUS, MOINS;					/* OpÃ©rateurs */
 terminal FOIS, DIVISE;
@@ -39,7 +41,7 @@ non terminal condition, iteration, expr_booleen, booleen;
 non terminal appel_fonction, param_appel, suite_param_appel, parametres, suite_parametres, argument, retour;
 non terminal expression, facteur, atome, type;
 non terminal op_secondaire, op_prioritaire, op_booleen;
-
+non terminal definition_loc,liste_definition_loc,definition_fonction;
 
 start with prog;
 
@@ -75,7 +77,7 @@ fonction ::= type:t IDF:idf PG parametres:param PD bloc:bk			{:	Noeud n = Noeud.
 																	:}
 		;
 			
-bloc ::= AG AD							{ RESULT = Noeud.VIDE; }		/* Important pour simplifier vérif condition et itération */
+bloc ::= AG AD							{ RESULT = Noeud.VIDE; }		/* Important pour simplifier vï¿½rif condition et itï¿½ration */
 		| AG seq_instructions AD		{ RESULT = si; }
 		;
 
@@ -158,19 +160,19 @@ appel_fonction ::= IDF:idf PG param_appel:paap PD	{:	Noeud n = new Noeud.APPEL(i
 													:}
 				;
 
-param_appel ::= expression:e suite_param_appel:spaap		{: RESULT = spaap.add(0,e); :}		/* Structure à revoir */
+param_appel ::= expression:e suite_param_appel:spaap		{: RESULT = spaap.add(0,e); :}		/* Structure ï¿½ revoir */
 			| /* VIDE */									{: RESULT = new ArrayList(); :}
 			;
 			
-suite_param_appel ::= VIRGULE expression:e suite_param_appel:spaap	{: RESULT = spaap.add(0,e); :}		/* Structure à revoir */
+suite_param_appel ::= VIRGULE expression:e suite_param_appel:spaap	{: RESULT = spaap.add(0,e); :}		/* Structure ï¿½ revoir */
 					| /* VIDE */									{: RESULT = new ArrayList(); :}
 					;
 					
-parametres ::= argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure à revoir */
+parametres ::= argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure ï¿½ revoir */
 				| /* VIDE */							{: RESULT = new ArrayList(); :}
 				;
 			
-suite_parametres ::= VIRGULE argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure à revoir */
+suite_parametres ::= VIRGULE argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure ï¿½ revoir */
 				| /* VIDE */										{: RESULT = new ArrayList(); :}
 				;
 				
@@ -178,7 +180,7 @@ argument ::= type:t IDF:idf		{:	Noeud n = Noeud.ARGUMENT;
 									n.ajouterFG(t);
 									n.ajouterFD(idf);
 									RESULT = n;
-								:}
+									TableDesSymboles.insertion(idf,Scope,t,v,rang_arg++);:}
 		| /* VIDE */
 		;
 			
@@ -226,6 +228,12 @@ op_booleen ::= PPQ	{: RESULT = Noeud.PPQ; :}
 			| PGQ	{: RESULT = Noeud.PGQ; :}
 			| PGE	{: RESULT = Noeud.PGE; :}
 			;
+definition_loc::= type:t IDF:idf EGAL valeur:v PV
+			{:TableDesSymboles.insertion(idf,Scope,t,v,rang_loc++);:};
+			
+definition_fonction::=type IDF:idf {:TableDesSymboles.insertion(idf,0);:}
+					PO argument PF AO liste_definition_loc{:TableDesSymboles.setArg_Loc(idf);:}
+					seq_instructions AF;
 
 /*------fin--------*/
 
