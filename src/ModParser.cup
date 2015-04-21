@@ -49,96 +49,142 @@ start with prog;
 
 /* NB: une sÃ©quence est une suite de quelque chose */
 
-prog ::= seq_instructions:si seq_fonctions:sf		{:	Noeud n = Noeud.PROG;
+prog ::= seq_instructions:si seq_fonctions:sf		{:	TableDesSymboles tds = new TableDesSymboles();
+														Arbre arbre = new Arbre();
+														Noeud n = Noeud.PROG;
 														n.ajouterFG(si);
 														n.ajouterFD(sf);
+														arbre.setRacine(n);
 														RESULT = n;
 													:}
 		;
 		
-seq_fonctions ::= fonction:f seq_fonctions:sf		{:	this.ajouterFD(f);
-														RESULT = sf;
-													:}
+seq_fonctions ::= fonction:f suite_seq_fonctions:ssf		{:	Noeud n = Noeud.SEQFONCT
+																n.ajouterFD(f);
+																RESULT = ssf;
+															:}
 			| /* VIDE */
 			;
 			
-fonction ::= type:t IDF:idf PG parametres:param PD bloc:bk			{:	Noeud n = Noeud.FONCT;
+suite_seq_fonctions ::= fonction:f suite_seq_fonctions:ssf		{:	this.ajouterFD(f);
+																	RESULT = ssf;
+																:}
+					| /* VIDE */
+					;
+			
+fonction ::= type:t IDF:idf PG parametres:param PD bloc:bc			{:	Noeud n = Noeud.FONCT;
 																		n.ajouterFG(t);
 																		n.ajouterFD(idf);
 																		n.ajouterFD(param);
-																		n.ajouterFD(bk);
+																		n.ajouterFD(bc);
 																		RESULT = n;
 																	:}
-		| IDF PG parametres PD bloc									{:	Noeud n = Noeud.FONCT;
+		| IDF:idf PG parametres:param PD bloc:bc					{:	Noeud n = Noeud.FONCT;
 																		n.ajouterFG(idf);
 																		n.ajouterFD(param);
-																		n.ajouterFD(bk);
+																		n.ajouterFD(bc);
 																		RESULT = n;
 																	:}
 		;
 			
-bloc ::= AG AD							{ RESULT = Noeud.VIDE; }		/* Important pour simplifier vï¿½rif condition et itï¿½ration */
-		| AG seq_instructions AD		{ RESULT = si; }
+bloc ::= AG AD							{: RESULT = Noeud.BLOC; :}
+		| AG seq_instructions:si AD		{:	Noeud n = Noeud.BLOC
+											n.ajouterFD(si);
+										:}
 		;
 
-seq_instructions ::= instruction:i seq_instructions:si		{:	this.ajouterFG(i);
-																RESULT = si;
-															:}
+seq_instructions ::= instruction:i suite_seq_instructions:ssi		{:	Noeud n = Noeud.SEQINSTR
+																		n.ajouterFD(i);
+																		RESULT = ssi;
+																	:}
 				| /* VIDE */
 				;
+				
+suite_seq_instructions ::= instruction:i suite_seq_instructions:ssi	{:	this.ajouterFD(i);
+																		RESULT = ssi;
+																	:}
+						| /* VIDE */
+						;
 		
-instruction ::= declaration:dec POINTVIRGULE		{ RESULT = dec; }
-			| affectation:aff POINTVIRGULE			{ RESULT = aff; }
-			| condition:cond						{ RESULT = cond; }
-			| iteration:it							{ RESULT = it; }
-			| appel_fonction:apf POINTVIRGULE		{ RESULT = apf; }
-			| retour:ret POINTVIRGULE				{ RESULT = ret; }
+instruction ::= declaration:dec POINTVIRGULE		{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(dec);
+														RESULT = n;
+													:}
+			| affectation:aff POINTVIRGULE			{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(aff);
+														RESULT = n;
+													:}
+			| condition:cond						{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(cond);
+														RESULT = n;
+													:}
+			| iteration:it							{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(it);
+														RESULT = n;
+													:}
+			| appel_fonction:apf POINTVIRGULE		{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(apf);
+														RESULT = n;
+													:}
+			| retour:ret POINTVIRGULE				{:	Noeud n = Noeud.INSTR;
+														n.ajouterFD(ret);
+														RESULT = n;
+													:}
 			;		
 
-declaration ::= type:t IDF:idf VIRGULE suite_declaration:sdec;		{:	Noeud n = Noeud.DECLARATION;
-																		sdec.add(idf);
-																		RESULT = sdec;
-																	:}
-			|	type:t IDF:idf EGAL expression:e			{:	Noeud n = Noeud.EGAL;
-																n.ajouterFG(t);
-																n.ajouterFD(idf);
-																n.ajouterFD(e);
-																RESULT = n;
-															:}
+declaration ::= type:t IDF:idf suite_declaration:sdec;					{:	Noeud n = Noeud.DECLARATION;		/* declaration et suite_declaration à vérifier */
+																			n.ajouterFG(t);
+																			n.ajouterFD(idf);
+																			RESULT = sdec;
+																		:}
+			| type:t IDF:idf suite_declaration:sdec EGAL expression:e	{:	Noeud n = Noeud.DECLARATION;
+																			Noeud op = Noeud.EGAL;
+																			n.ajouterFG(op);
+																			op.ajouterFG(t);
+																			op.ajouterFD(idf);
+																			RESULT = sdec;
+																			op.ajouterFD(e);
+																		:}
 			;
 
-suite_declaration ::= IDF suite_declaration
-					| IDF EGAL expression:e		
+suite_declaration ::= VIRGULE IDF:idf suite_declaration:sdec	{:	this.ajouterFD(idf);
+																	RESULT = sdec;
+																:}
+					| /* VIDE */
 					;
 				
-affectation ::= IDF EGAL expression:e		{:	Noeud n = Noeud.EGAL;
-												n.ajouterFG(idf);
-												n.ajouterFD(e);
+affectation ::= IDF EGAL expression:e		{:	Noeud n = Noeud.ASSIGN;
+												Noeud op = Noeud.EGAL;
+												n.ajouterFG(op);
+												op.ajouterFG(idf);
+												op.ajouterFD(e);
 												RESULT = n;
 											:}
 			;
 			
-condition ::= IF PG expr_booleen:eb PD bloc:bk1					{:	Noeud n = Noeud.IF;
+condition ::= IF PG expr_booleen:eb PD bloc:bc1					{:	Noeud n = Noeud.IF;
 																	n.ajouterFG(eb);
-																	n.ajouterFD(bk1);
+																	n.ajouterFD(bc1);
 																	RESULT = n;
 																:}
-			| IF PG expr_booleen:eb PD bloc:bk1 ELSE bloc:bk2	{:	Noeud n = Noeud.IF;
+			| IF PG expr_booleen:eb PD bloc:bc1 ELSE bloc:bc2	{:	Noeud n = Noeud.IF;
 																	n.ajouterFils(eb);
-																	n.ajouterFils(bk1);
-																	n.ajouterFils(bk2);
+																	n.ajouterFils(bc1);
+																	n.ajouterFils(bc2);
 																	RESULT = n;
 																:}
 			;
 
-iteration ::= WHILE PG expr_booleen:eb PD bloc:bk		{:	Noeud n = Noeud.WHILE;
+iteration ::= WHILE PG expr_booleen:eb PD bloc:bc		{:	Noeud n = Noeud.WHILE;
 															n.ajouterFG(eb);
-															n.ajouterFD(bk);
+															n.ajouterFD(bc);
 															RESULT = n;
 														:}
 			;
 			
-expr_booleen ::= booleen:b									{: RESULT = b; :}
+expr_booleen ::= booleen:b									{:	Noeud n = Noeud.BOOL;
+																n.ajouterFG(b);
+																RESULT = n; :}
 			| NOT expr_booleen:eb							{:	Noeud n = Noeud.NOT;
 																n.ajouterFils(eb);
 																RESULT = n;
@@ -154,43 +200,54 @@ booleen ::= VRAI	{: RESULT = Noeud.VRAI; :}
 		| FAUX		{: RESULT = Noeud.FAUX; :}
 		;
 		
-appel_fonction ::= IDF:idf PG param_appel:paap PD	{:	Noeud n = new Noeud.APPEL(idf);		/* Structure correcte ? */
-														n.ajouterFils(paap);
-														RESULT = n;
-													:}
+appel_fonction ::= IDF:idf PG param_appel:paap PD		{:	Noeud n = Noeud.APPEL;
+															n.ajouterFG(idf);
+															RESULT = paap;
+														:}
 				;
 
-param_appel ::= expression:e suite_param_appel:spaap		{: RESULT = spaap.add(0,e); :}		/* Structure ï¿½ revoir */
-			| /* VIDE */									{: RESULT = new ArrayList(); :}
+param_appel ::= expression:e suite_param_appel:spaap		{:	this.ajouterFD(e);
+																RESULT = spaap;
+															:}
+			| /* VIDE */
 			;
 			
-suite_param_appel ::= VIRGULE expression:e suite_param_appel:spaap	{: RESULT = spaap.add(0,e); :}		/* Structure ï¿½ revoir */
-					| /* VIDE */									{: RESULT = new ArrayList(); :}
+suite_param_appel ::= VIRGULE expression:e suite_param_appel:spaap		{:	this.ajouterFD(e);
+																			RESULT = spaap;
+																		:}
+					| /* VIDE */
 					;
 					
-parametres ::= argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure ï¿½ revoir */
-				| /* VIDE */							{: RESULT = new ArrayList(); :}
-				;
+parametres ::= argument:arg suite_parametres:spa		{:	Noeud n = Noeud.PARAM;
+															n.ajouterFG(arg);
+															RESULT = spa;
+														:}
+			| /* VIDE */
+			;
 			
-suite_parametres ::= VIRGULE argument:arg suite_parametres:spa		{: RESULT = spa.add(0,arg); :}		/* Structure ï¿½ revoir */
-				| /* VIDE */										{: RESULT = new ArrayList(); :}
+suite_parametres ::= VIRGULE argument:arg suite_parametres:spa		{:	this.ajouterFD(arg);
+																		RESULT = spa;
+																	:}
+				| /* VIDE */
 				;
 				
 argument ::= type:t IDF:idf		{:	Noeud n = Noeud.ARGUMENT;
 									n.ajouterFG(t);
 									n.ajouterFD(idf);
 									RESULT = n;
-									TableDesSymboles.insertion(idf,Scope,t,v,rang_arg++);:}
+									TableDesSymboles.insertion(idf,Scope,t,v,rang_arg++);
+								:}
 		| /* VIDE */
 		;
 			
-retour ::= RET expression:e		{:	Noeud n = Noeud.RET(e);		/* Structure correcte ? */
+retour ::= RET expression:e		{:	Noeud n = Noeud.RET;
+									n.ajouterFG(e);
 									RESULT = n;
 								:}
 		| RET					{: RESULT = Noeud.RET; :}
 		;
 		
-expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = new Noeud(op2);
+expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = op2;
 															n.ajouterFG(e);
 															n.ajouterFD(f);
 															RESULT = n;
@@ -198,7 +255,7 @@ expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = new Noeud(
 			| facteur:f									{: RESULT = f; :}
 			;
 			
-facteur ::= facteur:f op_prioritaire:op1 atome:a	{:  Noeud n = new Noeud(op1);
+facteur ::= facteur:f op_prioritaire:op1 atome:a	{:  Noeud n = op1;
 														n.ajouterFG(f);
 														n.ajouterFD(a);
 														RESULT = n;
@@ -207,8 +264,14 @@ facteur ::= facteur:f op_prioritaire:op1 atome:a	{:  Noeud n = new Noeud(op1);
 		| appel_fonction:af							{: RESULT = af; :}
 		;
 		
-atome ::= NOMBRE:nb					{: RESULT = Noeud.NOMBRE(nb); :}				/* Structure correcte ? */
-		| IDF:idf					{: RESULT = Noeud.IDF(tds.rechercher(idf)); :}	/* Structure correcte ? */
+atome ::= NOMBRE:nb					{:	Noeud n = Noeud.NOMBRE;
+										n.ajouterFG(nb);
+										RESULT = n;
+									:}
+		| IDF:idf					{:	Noeud n = Noeud.IDF;
+										n.ajouterFG(tds.rechercher(idf));
+										RESULT = n;
+									:}
 		| PG expression:e PD		{: RESULT = e; :}
 
 type ::= INT		{: RESULT = Noeud.INT; :}
