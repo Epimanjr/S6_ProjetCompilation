@@ -39,7 +39,39 @@ public class Assembleur {
         this.tds = tds;
         this.res = "";
     }
+ // test si un caractere est une idf
+ 	public boolean estLettre(Character c) {
+ 		if (c != null) {
+ 			int codeASCII = (int) c;
+ 			if ((codeASCII >= 97 && codeASCII < 122)
+ 					|| (codeASCII >= 65 && codeASCII <= 90)) {
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
+ 	
+ 	 // test si un caractere est une constante
 
+ 	public boolean estChiffre(String string) {
+		try {
+			Integer.parseInt(string + "");
+			return true;
+
+		} catch (NumberFormatException e) {
+			// TODO: handle exception
+			return false;
+		}
+
+	}
+ 	//test si c'est un opérateur
+ 	public boolean estOperateur(String string){
+ 		if(string=="+" ||	string=="-" || string=="/" || string=="*")
+ 			return true;
+ 		else
+		return false;
+ 		
+ 	}
     /**
      * Génération du code assembleur pour tout le programme.
      */
@@ -140,6 +172,54 @@ public class Assembleur {
      * @param noeud Noeud
      */
     private void generer_expression(Noeud noeud) {
-        // TODO
+       if (estChiffre(noeud.getValeur())){
+    	   res+= "CMOVE("+noeud.getValeur()+",r0)\n"
+           		+ "PUSH (r0)";
+       }
+       else
+    	   if(estLettre(noeud.getValeur().charAt(0))){
+    		   res+= "LD("+noeud.getValeur()+",r0)\n"
+    	        		+ "PUSH (r0)";
+    	   }
+    	   else 
+    		   if(estOperateur(noeud.getValeur())){
+    				   
+    			   // genreration de l'expression du fils droit
+    			   generer_expression(noeud.getFils().get(1));
+    			// genreration de l'expression du fils gauche
+    			   generer_expression(noeud.getFils().get(0));
+    			   res+="POP(r2)\n"
+    					   +"POP(r1)\n";
+        		   if(noeud.getValeur()=="+"){
+        			   res+="ADD(r1,r2,r3)\n";
+        		   }
+        		   else {
+        			   if (noeud.getValeur()=="-"){
+            			   res+="SUB(r1,r2,r3)\n";
+        				   
+        			   }
+        			   else{
+        				   if (noeud.getValeur()=="/"){
+                			   res+="DIV(r1,r2,r3)\n";
+        				   }
+        				   else{
+                			   res+="MUL(r1,r2,r3)\n";
+
+        				   }
+        			   }
+   
+    		   }
+    				   }
+       }
+    
+   
+    /**
+     * Génération d'une expression operateur.
+     *
+     * @param noeud Noeud
+     */
+    private void generer_expression_operateur(Noeud fils) {
+        // Génération de l'expression du fils DROIT
+    	
     }
 }
