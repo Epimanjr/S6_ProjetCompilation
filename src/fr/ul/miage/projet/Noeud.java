@@ -38,6 +38,7 @@ public class Noeud {
     
     public static String NOMBRE = "NB";
     public static String IDF = "IDF";
+    public static String CALL = "CALL";
     
     /**
      * 

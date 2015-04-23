@@ -57,8 +57,8 @@ non terminal contenudata;
 non terminal declaration;
 non terminal codes;
 non terminal fonction;
-non terminal List<Noeud> parametres;
-non terminal List<Noeud> parametresCall;
+non terminal ArrayList<Noeud> parametres;
+non terminal ArrayList<Noeud> parametresCall;
 non terminal argument;
 non terminal block;
 non terminal contenuBlock;
@@ -147,18 +147,18 @@ instrReturn ::= RET expression POINTVIRGULE
 affectation ::= IDF EGAL expression POINTVIRGULE
 			;
 
-expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = new Noeud(op2);
-															n.ajouterFG(e);
-															n.ajouterFD(f);
-															RESULT = n;
+expression ::= expression:e op_secondaire:op2 facteur:f	{: Noeud n = new Noeud(op2);
+														   n.ajouterFG(e);
+														   n.ajouterFD(f);
+														   RESULT = n;
 														:}
 			| facteur:f									{: RESULT = f; :}
 			;
 			
-facteur ::= facteur:f op_prioritaire:op1 valeur:v		{:  Noeud n = new Noeud(op1);
-														n.ajouterFG(f);
-														n.ajouterFD(v);
-														RESULT = n;
+facteur ::= facteur:f op_prioritaire:op1 valeur:v		{: Noeud n = new Noeud(op1);
+														   n.ajouterFG(f);
+														   n.ajouterFD(v);
+														   RESULT = n;
 														:}
 		| valeur:v										{: RESULT = v; :}
 		;
@@ -169,8 +169,8 @@ valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
 		| call:c										{: RESULT = c; :}
 		;
 
-call ::= IDF:idf PG parametresCall PD					{: Noeud n = new Noeud(Noeud.APPEL, tds.rechercher(idf));
-														   n.ajouterFD(f);
+call ::= IDF:idf PG parametresCall:pc PD				{: Noeud n = new Noeud(Noeud.CALL, tds.rechercher(idf));
+														   n.ajouterNoeud(pc);
 														   RESULT = n;
 									 					:} 
 		;
