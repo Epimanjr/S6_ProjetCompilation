@@ -36,6 +36,9 @@ public class Noeud {
     public static String PGQ = ">";
     public static String PGE = ">=";
     
+    public static String NOMBRE = "NB";
+    public static String IDF = "IDF";
+    
     /**
      * 
      * 

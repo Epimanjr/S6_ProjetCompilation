@@ -65,11 +65,13 @@ non terminal contenuBlock;
 non terminal instruction;
 non terminal affectation;
 non terminal Noeud expression;
+non terminal Noeud facteur;
 non terminal Noeud exprBooleen;
 non terminal Noeud valeur;
 non terminal Noeud call;
 non terminal instrReturn;
-non terminal String operateur;
+non terminal String op_prioritaire;
+non terminal String op_secondaire;
 non terminal String operateurBooleen;
 non terminal condition;
 non terminal booleen;
@@ -145,7 +147,7 @@ instrReturn ::= RET expression POINTVIRGULE
 affectation ::= IDF EGAL expression POINTVIRGULE
 			;
 
-expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = op2;
+expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = new Noeud(op2);
 															n.ajouterFG(e);
 															n.ajouterFD(f);
 															RESULT = n;
@@ -153,25 +155,18 @@ expression ::= expression:e op_secondaire:op2 facteur:f	{:  Noeud n = op2;
 			| facteur:f									{: RESULT = f; :}
 			;
 			
-facteur ::= facteur:f op_prioritaire:op1 valeur:v	{:  Noeud n = op1;
+facteur ::= facteur:f op_prioritaire:op1 valeur:v		{:  Noeud n = new Noeud(op1);
 														n.ajouterFG(f);
 														n.ajouterFD(v);
 														RESULT = n;
-													:}
-		| valeur:v									{: RESULT = v; :}
+														:}
+		| valeur:v										{: RESULT = v; :}
 		;
 		
-valeur ::= NOMBRE:nb					{:	Noeud n = Noeud.NOMBRE;
-										n.ajouterFG(nb);
-										RESULT = n;
-									:}
-		| IDF:idf					{:	Noeud n = Noeud.IDF;
-										n.ajouterFG(tds.rechercher(idf));
-										RESULT = n;
-									:}
-		| PG expression:e PD		{: RESULT = e; :}
-		
-		| appel_fonction:af			{: RESULT = af; :}
+valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
+		| IDF:idf										{: RESULT = new Noeud(Noeud.IDF, tds.rechercher(idf)); :}
+		| PG expression:e PD							{: RESULT = e; :}
+		| call:c										{: RESULT = c; :}
 		;
 
 call ::= IDF PG parametresCall PD
@@ -195,18 +190,18 @@ type ::= INT
 	   | VOID
 	   ;
 
-op_secondaire ::= PLUS		{: RESULT = Noeud.PLUS; :}
-				| MOINS		{: RESULT = Noeud.MOINS; :}
+op_secondaire ::= PLUS									{: RESULT = Noeud.PLUS; :}
+				| MOINS									{: RESULT = Noeud.MOINS; :}
 				;
 			
-op_prioritaire ::= FOIS		{: RESULT = Noeud.FOIS; :}
-				| DIVISE	{: RESULT = Noeud.DIVISE; :}
+op_prioritaire ::= FOIS									{: RESULT = Noeud.FOIS; :}
+				| DIVISE								{: RESULT = Noeud.DIVISE; :}
 				;
 
-operateurBooleen ::= PPQ	{: RESULT = Noeud.PPQ; :}
-				   | PPE	{: RESULT = Noeud.PPE; :}
-				   | PGQ	{: RESULT = Noeud.PGQ; :}
-				   | PGE	{: RESULT = Noeud.PGE; :}
+operateurBooleen ::= PPQ								{: RESULT = Noeud.PPQ; :}
+				   | PPE								{: RESULT = Noeud.PPE; :}
+				   | PGQ								{: RESULT = Noeud.PGQ; :}
+				   | PGE								{: RESULT = Noeud.PGE; :}
 				   ;
 
 /*------fin--------*/
