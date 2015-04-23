@@ -176,9 +176,12 @@ call ::= IDF:idf PG parametresCall:pc PD				{: Noeud n = new Noeud(Noeud.CALL, t
 									 					:} 
 		;
 
-parametres ::= argument 
-			| parametres VIRGULE argument
-			| call
+parametres ::= argument suiteParametres
+			| /* VIDE */
+			;
+			
+suiteParametres ::= VIRGULE argument suiteParametres
+			| /* VIDE */
 			;
 
 parametresCall ::= expression:e suiteParametresCall:spc {: spc.add(0,e);
@@ -192,6 +195,7 @@ suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(
 					  ;
 
 argument ::= type IDF 
+			| call
 			| /* EMPTY */
 			;
 			
