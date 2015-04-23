@@ -169,7 +169,10 @@ valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
 		| call:c										{: RESULT = c; :}
 		;
 
-call ::= IDF PG parametresCall PD
+call ::= IDF:idf PG parametresCall PD					{: Noeud n = new Noeud(Noeud.APPEL, tds.rechercher(idf));
+														   n.ajouterFD(f);
+														   RESULT = n;
+									 					:} 
 		;
 
 parametres ::= argument 
