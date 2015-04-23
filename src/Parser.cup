@@ -110,15 +110,17 @@ fonction ::= type IDF PG parametres PD block | IDF PG parametres PD block
 			;
 
 
-block ::= AG contenuBlock AD
-		| AG AD
+block ::= AG contenuBlock:cb AD	{:	Noeud n = new Noeud(Noeud.BLOC);
+									n.ajouterNoeud(cb);
+									RESULT = cb; :} 
 		;
 
-contenuBlock ::= instruction 
-				| contenuBlock instruction
+contenuBlock ::= contenuBlock:cb instruction:i	{:	cb.add(0,i);
+													RESULT = cb; :}
+				| /* VIDE */ 					{: RESULT = new ArrayList<Noeud>(); :}
 				;
 
-instruction ::= affectation 
+instruction ::= affectation
 			| data
 			| instrReturn
 			| call
@@ -126,11 +128,21 @@ instruction ::= affectation
 			| iteration
 			;
 
-condition ::= IF PG booleen PD block
-			| IF PG booleen PD block ELSE block
+condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
+																n.ajouterFG(bool);
+																n.ajouterFD(b1);
+																RESULT = n; :}
+			| IF PG booleen:bool PD block:b1 ELSE block:b2	{:	Noeud n = new Noeud(Noeud.IF);
+																n.ajouterFG(bool);
+																n.ajouterFD(b1);
+																n.ajouterFD(b2);
+																RESULT = n; :}
 			;
 
-iteration ::= WHILE PG booleen PD block
+iteration ::= WHILE PG booleen:bool PD block:b	{:	Noeud n = new Noeud(Noeud.WHILE);
+													n.ajouterFG(bool);
+													n.ajouterFD(b);
+													RESULT = n; :}
 			;
 
 booleen ::= VRAI			{: RESULT = Noeud.VRAI; :}
