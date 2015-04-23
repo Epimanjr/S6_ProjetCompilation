@@ -88,10 +88,19 @@ start with x;
 x ::= prog
 		;
 
-prog ::= datas | datas codes | codes
+prog ::= datas:ds codes:c		{:	Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+									Noeud datas = new Noeud(Noeud.DATAS);	/* On crée un noeud pour les datas et un noeud pour les codes */
+									Noeud codes = new Noeud(Noeud.CODES);
+									n.ajouterFG(datas);
+									n.ajouterFG(codes);
+									datas.ajouterNoeud(ds);					/* Les datas seront les fils du noeud DATAS et les codes ceux du noeud CODE */
+									codes.ajouterNoeud(c);
+									RESULT = n; :} 
 		;
 
-datas ::= data | datas data
+datas ::= datas:ds data:d		{:	ds.add(0,d);
+									RESULT = ds; :}
+		| /* VIDE */			{: RESULT = new ArrayList<Noeud>(); :}
 		;
 
 data ::= type contenudata POINTVIRGULE
@@ -103,16 +112,26 @@ contenudata ::= declaration | contenudata VIRGULE declaration
 declaration ::= IDF | IDF EGAL NOMBRE
 			;
 		
-codes ::= fonction | codes fonction
+codes ::= codes:c fonction:f		{:	c.add(0,f);
+										RESULT = c; :}
+		| /* VIDE */				{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= type IDF PG parametres PD block | IDF PG parametres PD block
+fonction ::= type:t IDF:idf PG parametres:p PD block:b		{:	Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
+																n.ajouterFG(t);
+																n.ajouterFD(p);
+																n.ajouterFD(b);
+																RESULT = n; :}
+			| IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
+																n.ajouterFD(p);
+																n.ajouterFD(b);
+																RESULT = n; :}
 			;
 
 
-block ::= AG contenuBlock:cb AD	{:	Noeud n = new Noeud(Noeud.BLOC);
-									n.ajouterNoeud(cb);
-									RESULT = cb; :} 
+block ::= AG contenuBlock:cb AD		{:	Noeud n = new Noeud(Noeud.BLOC);
+										n.ajouterNoeud(cb);
+										RESULT = n; :} 
 		;
 
 contenuBlock ::= contenuBlock:cb instruction:i	{:	cb.add(0,i);
