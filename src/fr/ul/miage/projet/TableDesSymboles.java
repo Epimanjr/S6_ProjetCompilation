@@ -44,6 +44,16 @@ public class TableDesSymboles {
 		return null;
 	}
 	
+	public HashMap<String, String> rechercher(String idf) {
+		Variable var = new Variable(idf,0);
+		for (Variable v:tds.keySet()){
+			if(v==var){
+				return tds.get(var);
+			}
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Méthode d'insertion d'une variables globales
