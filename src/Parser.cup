@@ -67,19 +67,19 @@ non terminal Noeud argument;
 non terminal Noeud block;
 non terminal ArrayList<Noeud> contenuBlock;
 non terminal Noeud instruction;
-non terminal affectation;
+non terminal Noeud affectation;
 non terminal Noeud expression;
 non terminal Noeud facteur;
 non terminal Noeud exprBooleen;
 non terminal Noeud valeur;
 non terminal Noeud call;
-non terminal instrReturn;
+non terminal Noeud instrReturn;
 non terminal String op_prioritaire;
 non terminal String op_secondaire;
 non terminal String operateurBooleen;
-non terminal condition;
+non terminal Noeud condition;
 non terminal Noeud booleen;
-non terminal iteration;
+non terminal Noeud iteration;
 
 
 start with x;
@@ -142,22 +142,22 @@ fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new
 			;
 
 
-block ::= AG contenuBlock:cb AD		{:	Noeud n = new Noeud(Noeud.BLOCK);
-										n.ajouterNoeud(cb);
-										RESULT = n; :} 
+block ::= AG contenuBlock:cb AD							{:	Noeud n = new Noeud(Noeud.BLOCK);
+															n.ajouterNoeud(cb);
+															RESULT = n; :} 
 		;
 
-contenuBlock ::= contenuBlock:cb instruction:i	{: cb.add(0,i);
-												   RESULT = cb; :}
-				| /* VIDE */ 					{: RESULT = new ArrayList<Noeud>(); :}
+contenuBlock ::= contenuBlock:cb instruction:i			{: cb.add(0,i);
+														   RESULT = cb; :}
+				| /* VIDE */ 							{: RESULT = new ArrayList<Noeud>(); :}
 				;
 
-instruction ::= affectation
-			| data
-			| instrReturn
-			| call
-			| condition
-			| iteration
+instruction ::= affectation:af							{: RESULT = af; :}
+			| data:da									{: RESULT = da; :}
+			| instrReturn:re							{: RESULT = re; :}
+			| call:ca									{: RESULT = ca; :}
+			| condition:co								{: RESULT = co; :}
+			| iteration:it								{: RESULT = it; :}
 			;
 
 condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
@@ -171,15 +171,15 @@ condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF)
 																RESULT = n; :}
 			;
 
-iteration ::= WHILE PG booleen:bool PD block:b	{:	Noeud n = new Noeud(Noeud.WHILE);
-													n.ajouterFG(bool);
-													n.ajouterFD(b);
-													RESULT = n; :}
+iteration ::= WHILE PG booleen:bool PD block:b			{:	Noeud n = new Noeud(Noeud.WHILE);
+															n.ajouterFG(bool);
+															n.ajouterFD(b);
+															RESULT = n; :}
 			;
 
-booleen ::= VRAI			{: RESULT = new Noeud(Noeud.VRAI); :}
-		  | FAUX			{: RESULT = new Noeud(Noeud.FAUX); :}
-		  | exprBooleen:e	{: RESULT = e; :}
+booleen ::= VRAI										{: RESULT = new Noeud(Noeud.VRAI); :}
+		  | FAUX										{: RESULT = new Noeud(Noeud.FAUX); :}
+		  | exprBooleen:e								{: RESULT = e; :}
 		  ;
 
 exprBooleen ::= valeur:v operateurBooleen:opb exprBooleen:e	{: Noeud n = new Noeud(opb);
@@ -249,11 +249,11 @@ argument ::= type IDF
 			| call
 			;
 			
-type ::= INT
+type ::= INT											{: RESULT = "int"; :}
 	   ;
 
-typeFonction ::= INT
-			   | VOID
+typeFonction ::= INT									{: RESULT = "int"; :}
+			   | VOID									{: RESULT = "void"; :}
 			   ;
 
 op_secondaire ::= PLUS									{: RESULT = Noeud.PLUS; :}
