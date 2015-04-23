@@ -51,6 +51,7 @@ terminal FAUX;
 non terminal x;
 non terminal prog;
 non terminal type;
+non terminal typeFonction;
 non terminal datas;
 non terminal data;
 non terminal contenudata;
@@ -117,7 +118,7 @@ codes ::= codes:c fonction:f		{: c.add(0,f);
 		| /* VIDE */				{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= type:t IDF:idf PG parametres:p PD block:b		{:	Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
+fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
 																n.ajouterFG(t);
@@ -242,8 +243,11 @@ argument ::= type IDF
 			;
 			
 type ::= INT
-	   | VOID
 	   ;
+
+typeFonction ::= INT
+			   | VOID
+			   ;
 
 op_secondaire ::= PLUS									{: RESULT = Noeud.PLUS; :}
 				| MOINS									{: RESULT = Noeud.MOINS; :}
