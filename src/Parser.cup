@@ -66,7 +66,7 @@ non terminal instruction;
 non terminal affectation;
 non terminal Noeud expression;
 non terminal Noeud exprBooleen;
-non terminal valeur;
+non terminal Noeud valeur;
 non terminal Noeud call;
 non terminal instrReturn;
 non terminal String operateur;
@@ -145,7 +145,7 @@ instrReturn ::= RET expression POINTVIRGULE
 affectation ::= IDF EGAL expression POINTVIRGULE
 			;
 
-valeur ::= NOMBRE	
+valeur ::= NOMBRE:c		{: RESULT = new Noeud(Noeud.CONST,c); :}	
 		| IDF
 		| call
 		;
@@ -153,14 +153,26 @@ valeur ::= NOMBRE
 call ::= IDF PG parametresCall PD
 		;
 
-expression ::= valeur
-			| valeur:v operateur:o expression:e								{:  Noeud n = new Noeud(o);
-																				n.ajouterFG(v);
-																				n.ajouterFD(e);
-																				RESULT = n;
-																			:}
-			| PG valeur operateur expression PD
-			| PG valeur operateur expression PD operateur expression
+expression ::= valeur:v																{:  RESULT = v;
+																					:}
+			| valeur:v operateur:o expression:e										{:  Noeud n = new Noeud(o);
+																						n.ajouterFG(v);
+																						n.ajouterFD(e);
+																						RESULT = n;
+																					:}
+			| PG valeur:v operateur:o expression:e PD								{:  Noeud n = new Noeud(o);
+																						n.ajouterFG(v);
+																						n.ajouterFD(e);
+																						RESULT = n;
+																					:}
+			| PG valeur:v operateur:o expression:e PD operateur:o2 expression:e2	{:  Noeud n = new Noeud(o);
+																						n.ajouterFG(v);
+																						n.ajouterFD(e);
+																						Noeud n2 = new Noeud(o2);
+																						n2.ajouterFG(n);
+																						n2.ajouterFD(e2);
+																						RESULT = n2;
+																					:}
 			;
 
 parametres ::= argument 
@@ -181,10 +193,10 @@ type ::= INT
 	   | VOID
 	   ;
 
-operateur ::= PLUS		{: RESULT = Noeud.PLUS; :}
-			| MOINS		{: RESULT = Noeud.MOINS; :}
-			| FOIS		{: RESULT = Noeud.FOIS; :}
-			| DIVISE	{: RESULT = Noeud.DIVISE; :}
+operateur ::= PLUS			{: RESULT = Noeud.PLUS; :}
+			| MOINS			{: RESULT = Noeud.MOINS; :}
+			| FOIS			{: RESULT = Noeud.FOIS; :}
+			| DIVISE		{: RESULT = Noeud.DIVISE; :}
 			;
 
 operateurBooleen ::= PPQ	{: RESULT = Noeud.PPQ; :}
