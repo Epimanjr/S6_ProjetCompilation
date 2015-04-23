@@ -133,21 +133,25 @@ condition ::= IF PG booleen PD block
 iteration ::= WHILE PG booleen PD block
 			;
 
-booleen ::= VRAI
-			| FAUX
-			| exprBooleen
-			;
+booleen ::= VRAI			{: RESULT = Noeud.VRAI; :}
+		  | FAUX			{: RESULT = Noeud.FAUX; :}
+		  | exprBooleen		{: RESULT = e; :}
+		  ;
 
-exprBooleen ::= valeur 
-			| valeur operateurBooleen exprBooleen
-			;
+exprBooleen ::= valeur:v operateurBooleen:opb exprBooleen:e	{: Noeud n = new Noeud(opb);
+														   	   n.ajouterFG(v);
+														   	   n.ajouterFD(e);
+														   	   RESULT = n; :}
+			  | valeur:v									{: RESULT = v; :}
+			  ;
 
 instrReturn ::= RET expression POINTVIRGULE
 			| RET POINTVIRGULE
 			;
 
 affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(Noeud.AFFECTATION);
-														   n.ajouterFG(idf);
+														   Noeud nIDF = new Noeud(Noeud.IDF, tds.rechercher(idf));
+														   n.ajouterFG(nIDF);
 														   n.ajouterFD(e);
 														   RESULT = n; :}
 			;
