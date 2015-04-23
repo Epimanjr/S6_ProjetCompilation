@@ -50,6 +50,17 @@ public class Noeud {
         this.valeur = valeur;
         this.fils = new ArrayList<>();
     }
+    
+    /**
+     * Construi un Noeud à partir de son type et d'une valeur (donnés en paramètre)
+     * @param type Le type de noeud (idf, nombre, ...)
+     * @param valeur La valeur du noeud
+     */
+    public Noeud(String type, String valeur) {
+    	this.type = type;
+    	this.valeur = valeur;
+    	this.fils = new ArrayList<>();
+    }
 
     /**
      * Ajout d'un fils à la liste des Noeuds enfants.
