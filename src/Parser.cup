@@ -52,11 +52,11 @@ non terminal x;
 non terminal prog;
 non terminal type;
 non terminal typeFonction;
-non terminal datas;
-non terminal data;
-non terminal contenudata;
+non terminal ArrayList<Noeud> datas;
+non terminal Noeud data;
+non terminal ArrayList<Noeud> contenudata;
 non terminal declaration;
-non terminal codes;
+non terminal ArrayList<Noeud> codes;
 non terminal fonction;
 non terminal ArrayList<Noeud> parametres;
 non terminal ArrayList<Noeud> suiteParametres;
@@ -89,22 +89,24 @@ start with x;
 x ::= prog
 		;
 
-prog ::= datas:ds codes:c		{:	Noeud n = new Noeud(Noeud.PROG);		/* On cr�e un noeud de d�part */
-									Noeud datas = new Noeud(Noeud.DATAS);	/* On cr�e un noeud pour les datas et un noeud pour les codes */
-									Noeud codes = new Noeud(Noeud.CODES);
-									n.ajouterFG(datas);
-									n.ajouterFG(codes);
-									datas.ajouterNoeud(ds);					/* Les datas seront les fils du noeud DATAS et les codes ceux du noeud CODE */
-									codes.ajouterNoeud(c);
-									RESULT = n; :} 
+prog ::= datas:ds codes:cs		{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+								   Noeud datas = new Noeud(Noeud.DATAS);	/* On crée un noeud pour les datas et un noeud pour les codes */
+								   Noeud codes = new Noeud(Noeud.CODES);
+								   n.ajouterFG(datas);
+								   n.ajouterFD(codes);
+								   datas.ajouterNoeud(ds);					/* Les datas seront les fils du noeud DATAS et les codes ceux du noeud CODE */
+								   codes.ajouterNoeud(cs);
+								   RESULT = n; :} 
 		;
 
-datas ::= datas:ds data:d		{:	ds.add(0,d);
-									RESULT = ds; :}
+datas ::= datas:ds data:d		{: ds.add(0,d);
+								   RESULT = ds; :}
 		| /* VIDE */			{: RESULT = new ArrayList<Noeud>(); :}
 		;
 
-data ::= type contenudata POINTVIRGULE
+data ::= type:t contenudata:cd POINTVIRGULE {: Noeud n = new Noeud(t, Noeud.DATA)
+										  	   n.ajouterNoeud(cd);
+										  	   RESULT = n; :}
 		;
 
 contenudata ::= declaration | contenudata VIRGULE declaration
@@ -115,7 +117,6 @@ declaration ::= IDF | IDF EGAL NOMBRE
 		
 codes ::= codes:c fonction:f		{: c.add(0,f);
 									   RESULT = c; :}
-		| /* VIDE */				{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
 fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
