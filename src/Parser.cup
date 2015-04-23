@@ -146,22 +146,23 @@ instrReturn ::= RET expression POINTVIRGULE
 			| RET POINTVIRGULE
 			;
 
-affectation ::= IDF EGAL expression POINTVIRGULE
+affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(Noeud.AFFECTATION);
+														   n.ajouterFG(idf);
+														   n.ajouterFD(e);
+														   RESULT = n; :}
 			;
 
 expression ::= expression:e op_secondaire:op2 facteur:f	{: Noeud n = new Noeud(op2);
 														   n.ajouterFG(e);
 														   n.ajouterFD(f);
-														   RESULT = n;
-														:}
+														   RESULT = n; :}
 			| facteur:f									{: RESULT = f; :}
 			;
 			
 facteur ::= facteur:f op_prioritaire:op1 valeur:v		{: Noeud n = new Noeud(op1);
 														   n.ajouterFG(f);
 														   n.ajouterFD(v);
-														   RESULT = n;
-														:}
+														   RESULT = n; :}
 		| valeur:v										{: RESULT = v; :}
 		;
 		
@@ -173,8 +174,7 @@ valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
 
 call ::= IDF:idf PG parametresCall:pc PD				{: Noeud n = new Noeud(Noeud.CALL, tds.rechercher(idf));
 														   n.ajouterNoeud(pc);
-														   RESULT = n;
-									 					:} 
+														   RESULT = n; :} 
 		;
 
 parametres ::= argument:a suiteParametres:sp			{: sp.add(0,a);
