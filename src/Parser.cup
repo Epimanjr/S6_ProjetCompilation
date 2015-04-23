@@ -50,14 +50,15 @@ terminal FAUX;
 
 non terminal x;
 non terminal prog;
-non terminal type;
-non terminal typeFonction;
+non terminal String type;
+non terminal String typeFonction;
 non terminal ArrayList<Noeud> datas;
 non terminal Noeud data;
 non terminal ArrayList<Noeud> contenudata;
-non terminal declaration;
+non terminal ArrayList<Noeud> suiteContenudata;
+non terminal Noeud declaration;
 non terminal ArrayList<Noeud> codes;
-non terminal fonction;
+non terminal Noeud fonction;
 non terminal ArrayList<Noeud> parametres;
 non terminal ArrayList<Noeud> suiteParametres;
 non terminal ArrayList<Noeud> parametresCall;
@@ -65,7 +66,7 @@ non terminal ArrayList<Noeud> suiteParametresCall;
 non terminal Noeud argument;
 non terminal Noeud block;
 non terminal ArrayList<Noeud> contenuBlock;
-non terminal instruction;
+non terminal Noeud instruction;
 non terminal affectation;
 non terminal Noeud expression;
 non terminal Noeud facteur;
@@ -77,7 +78,7 @@ non terminal String op_prioritaire;
 non terminal String op_secondaire;
 non terminal String operateurBooleen;
 non terminal condition;
-non terminal booleen;
+non terminal Noeud booleen;
 non terminal iteration;
 
 
@@ -104,37 +105,38 @@ datas ::= datas:ds data:d		{: ds.add(0,d);
 		| /* VIDE */			{: RESULT = new ArrayList<Noeud>(); :}
 		;
 
-data ::= type:t contenudata:cd POINTVIRGULE {: Noeud n = new Noeud(t, Noeud.DATA)
+data ::= type:t contenudata:cd POINTVIRGULE {: Noeud n = new Noeud(t, Noeud.DATA);
 										  	   n.ajouterNoeud(cd);
 										  	   RESULT = n; :}
 		;
 
-contenudata ::= declaration suiteContenudata
+contenudata ::= declaration:d suiteContenudata:scd				{: scd.add(0,d); 
+															   	   RESULT = scd; :}
 			;
 			
-suiteContenudata ::= VIRGULE declaration suiteContenudata
-			| /* VIDE */
-			;
+suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
+															   	   RESULT = scd; :}
+				   | /* VIDE */
+				   ;
 
-declaration ::= IDF | IDF EGAL NOMBRE
-			;
+declaration ::= IDF:idf 				{: //tds.insertion(); :}
+			  | IDF:idf EGAL NOMBRE:nb	{: //tds.insertion(); :}
+			  ;
 		
-codes ::= codes:c fonction:f		{: c.add(0,f);
-									   RESULT = c; :}
+codes ::= codes:cs fonction:fct		{: cs.add(0,fct);
+									   RESULT = cs; :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
+fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new Noeud(t, tds.rechercher(idf));
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
-																n.ajouterFG(t);
-																n.ajouterFD(nParam);
+																n.ajouterFG(nParam);
 																n.ajouterFD(b);
 																RESULT = n; :}
-			| IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.FONCTION, tds.rechercher(idf));
+			| IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud("void", tds.rechercher(idf));
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
-																n.ajouterFG("void");
-																n.ajouterFD(nParam);
+																n.ajouterFG(nParam);
 																n.ajouterFD(b);
 																RESULT = n; :}
 			;
@@ -175,9 +177,9 @@ iteration ::= WHILE PG booleen:bool PD block:b	{:	Noeud n = new Noeud(Noeud.WHIL
 													RESULT = n; :}
 			;
 
-booleen ::= VRAI			{: RESULT = Noeud.VRAI; :}
-		  | FAUX			{: RESULT = Noeud.FAUX; :}
-		  | exprBooleen		{: RESULT = e; :}
+booleen ::= VRAI			{: RESULT = new Noeud(Noeud.VRAI); :}
+		  | FAUX			{: RESULT = new Noeud(Noeud.FAUX); :}
+		  | exprBooleen:e	{: RESULT = e; :}
 		  ;
 
 exprBooleen ::= valeur:v operateurBooleen:opb exprBooleen:e	{: Noeud n = new Noeud(opb);
