@@ -14,6 +14,11 @@ public class TableDesSymboles {
 	 * A chaque variable, on associe ses caractéristiques (stockées dans une hashmap)
 	 */
 	private HashMap<Variable, HashMap<String, String>> tds;
+	
+	/**
+	 * On stocke le dernier rang inséré dans la TDS
+	 */
+	private static int dernierRangInsere;
 
 	/**
 	 * Constructeur d'une TDS vide
@@ -30,6 +35,7 @@ public class TableDesSymboles {
 	public TableDesSymboles(HashMap<Variable, HashMap<String, String>> tds) {
 		super();
 		this.tds = tds;
+		this.dernierRangInsere = -1;
 	}
 
 	/**
@@ -60,16 +66,17 @@ public class TableDesSymboles {
 	 * @throws ConflitDeVariable 
 	 */
 	public void insertion(String idf, int scope, String type, String val) throws ConflitDeVariable {
-	Variable var=new Variable(idf, scope);
-	if (rechercher(var)==null){
-		HashMap<String, String> caracteristiques = new HashMap<String, String>();		
-		caracteristiques.put("type", type);
-		caracteristiques.put("valeur", val);
-		
-		this.tds.put(new Variable(idf, scope), caracteristiques);
-	}
-	else
-		throw new ConflitDeVariable("Le variable "+idf+" existe dèja");
+		this.dernierRangInsere++;
+		Variable var=new Variable(this.dernierRangInsere,idf, scope);
+		if (rechercher(var)==null){
+			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
+			caracteristiques.put("type", type);
+			caracteristiques.put("valeur", val);
+			
+			this.tds.put(new Variable(idf, scope), caracteristiques);
+		}
+		else
+			throw new ConflitDeVariable("Le variable "+idf+" existe dèja");
 	}
 	/**
 	 * Méthode d'insertion d'une variable locale ou argument

@@ -6,6 +6,11 @@ package fr.ul.miage.projet;
 public class Variable {
 
 	/**
+	 * Rang dans la TDS
+	 */
+	private int rangTDS;
+	
+	/**
 	 * Identificateur de la Variable
 	 */
 	private String idf;
@@ -14,6 +19,18 @@ public class Variable {
 	 * Scope de la variable
 	 */
 	private int scope;
+	
+	/**
+	 * @param rangTDS
+	 * @param idf
+	 * @param scope
+	 */
+	public Variable(int rangTDS, String idf, int scope) {
+		super();
+		this.rangTDS = rangTDS;
+		this.idf = idf;
+		this.scope = scope;
+	}
 	
 	/**
 	 * @param idf
