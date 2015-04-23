@@ -109,8 +109,11 @@ data ::= type:t contenudata:cd POINTVIRGULE {: Noeud n = new Noeud(t, Noeud.DATA
 										  	   RESULT = n; :}
 		;
 
-contenudata ::= declaration							{: Noeud n = :}
-			  | contenudata VIRGULE declaration		{: :}
+contenudata ::= declaration suiteContenudata
+			;
+			
+suiteContenudata ::= VIRGULE declaration suiteContenudata
+			| /* VIDE */
 			;
 
 declaration ::= IDF | IDF EGAL NOMBRE
