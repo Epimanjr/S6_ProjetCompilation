@@ -58,6 +58,7 @@ non terminal declaration;
 non terminal codes;
 non terminal fonction;
 non terminal ArrayList<Noeud> parametres;
+non terminal ArrayList<Noeud> suiteParametres;
 non terminal ArrayList<Noeud> parametresCall;
 non terminal ArrayList<Noeud> suiteParametresCall;
 non terminal argument;
@@ -176,12 +177,14 @@ call ::= IDF:idf PG parametresCall:pc PD				{: Noeud n = new Noeud(Noeud.CALL, t
 									 					:} 
 		;
 
-parametres ::= argument suiteParametres
-			| /* VIDE */
+parametres ::= argument:a suiteParametres:sp			{: sp.add(0,a);
+														   RESULT = sp; :}
+			| /* VIDE */								{: RESULT = new ArrayList<Noeud>(); :}
 			;
 			
-suiteParametres ::= VIRGULE argument suiteParametres
-			| /* VIDE */
+suiteParametres ::= VIRGULE argument:a suiteParametres:sp {: sp.add(0,a);
+															 RESULT = sp; :}
+				  | /* VIDE */							  {: RESULT = new ArrayList<Noeud>(); :}
 			;
 
 parametresCall ::= expression:e suiteParametresCall:spc {: spc.add(0,e);
@@ -196,7 +199,6 @@ suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(
 
 argument ::= type IDF 
 			| call
-			| /* EMPTY */
 			;
 			
 type ::= INT
