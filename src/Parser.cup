@@ -5,6 +5,7 @@
 package fr.ul.miage.projet.generated;
 import java_cup.runtime.Symbol;
 import fr.ul.miage.projet.*;
+import java.util.*;
 
 /* contrôle des erreurs de syntaxe : surcharge */
 parser code {:
@@ -21,18 +22,58 @@ action code {:
 
 /* la grammaire */
 
-terminal IDF, EGAL, VIRGULE, POINTVIRGULE, NOMBRE;
-terminal INT, VOID;
-terminal PG, PD, AG, AD;
-terminal PLUS, MOINS, FOIS, DIVISE;
+terminal String IDF;
+terminal EGAL;
+terminal VIRGULE;
+terminal POINTVIRGULE;
+terminal String NOMBRE;
+terminal INT;
+terminal VOID;
+terminal PG;
+terminal PD;
+terminal AG;
+terminal AD;
+terminal PLUS;
+terminal MOINS;
+terminal FOIS;
+terminal DIVISE;
 terminal RET;
-terminal IF, ELSE, WHILE, PPQ, PPE, PGQ, PGE, VRAI, FAUX;
+terminal IF;
+terminal ELSE;
+terminal WHILE;
+terminal PPQ;
+terminal PPE;
+terminal PGQ;
+terminal PGE;
+terminal VRAI;
+terminal FAUX;
 
 non terminal x;
-non terminal prog, type, datas, data, contenudata, declaration;
-non terminal codes, fonction, parametres, parametresCall, argument, block, contenuBlock;
-non terminal instruction, affectation, expression, valeur, operateur, call, instrReturn;
-non terminal condition, booleen, operateurBooleen, exprBooleen, iteration;
+non terminal prog;
+non terminal type;
+non terminal datas;
+non terminal data;
+non terminal contenudata;
+non terminal declaration;
+non terminal codes;
+non terminal fonction;
+non terminal List<Noeud> parametres;
+non terminal List<Noeud> parametresCall;
+non terminal argument;
+non terminal block;
+non terminal contenuBlock;
+non terminal instruction;
+non terminal affectation;
+non terminal Noeud expression;
+non terminal Noeud exprBooleen;
+non terminal valeur;
+non terminal Noeud call;
+non terminal instrReturn;
+non terminal String operateur;
+non terminal String operateurBooleen;
+non terminal condition;
+non terminal booleen;
+non terminal iteration;
 
 
 start with x;

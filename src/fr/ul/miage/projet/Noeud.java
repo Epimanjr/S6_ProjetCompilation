@@ -156,7 +156,7 @@ public class Noeud {
     /**
     * Ajoute une liste de fils à un noeud.
     */
-    void ajouterNoeud(ArrayList<Noeud> liste){
+    public void ajouterNoeud(ArrayList<Noeud> liste){
     	for(int i = 0; i<liste.size()-1; i++){
     		this.fils.add(liste.get(i));
     	}
@@ -165,7 +165,7 @@ public class Noeud {
     /**
     * Ajoute un fils gauche à un noeud.
     */
-    void ajouterFG(Noeud fg){
+    public void ajouterFG(Noeud fg){
     	if(fils.isEmpty()){
     		fils.add(fg);
     	} else {
@@ -179,7 +179,7 @@ public class Noeud {
     /**
     * Ajoute un fils droit à un noeud.
     */
-    void ajouterFD(Noeud fd){
+    public void ajouterFD(Noeud fd){
     	fils.add(fd);
     }
 

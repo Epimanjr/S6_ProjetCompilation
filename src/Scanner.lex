@@ -62,8 +62,8 @@ RLTAB   =   "\n"|"\r\n"|"\t"
 "*"			{ return new Symbol(ParserSym.FOIS);}
 "/"			{ return new Symbol(ParserSym.DIVISE);}
 " "			{ ; }
-{NOMBRE}	{ return new Symbol(ParserSym.NOMBRE);}
-{IDF}		{ return new Symbol(ParserSym.IDF);}
+{NOMBRE}	{ return new Symbol(ParserSym.NOMBRE, yytext());}
+{IDF}		{ return new Symbol(ParserSym.IDF, yytext());}
 {RLTAB}     { ; }
 {Comment}	{ /* IGNORE */ }
 
