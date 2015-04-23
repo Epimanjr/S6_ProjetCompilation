@@ -61,7 +61,7 @@ non terminal ArrayList<Noeud> parametres;
 non terminal ArrayList<Noeud> suiteParametres;
 non terminal ArrayList<Noeud> parametresCall;
 non terminal ArrayList<Noeud> suiteParametresCall;
-non terminal argument;
+non terminal Noeud argument;
 non terminal block;
 non terminal contenuBlock;
 non terminal instruction;
