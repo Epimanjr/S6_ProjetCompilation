@@ -59,6 +59,7 @@ non terminal codes;
 non terminal fonction;
 non terminal ArrayList<Noeud> parametres;
 non terminal ArrayList<Noeud> parametresCall;
+non terminal ArrayList<Noeud> suiteParametresCall;
 non terminal argument;
 non terminal block;
 non terminal contenuBlock;
@@ -180,10 +181,15 @@ parametres ::= argument
 			| call
 			;
 
-parametresCall ::= expression 
-				| parametresCall VIRGULE expression
-				| /* EMPTY */
-				;
+parametresCall ::= expression:e suiteParametresCall:spc {: spc.add(0,e);
+														   RESULT = spc; :}
+				 | /* VIDE */							{: RESULT = new ArrayList<Noeud>(); :}
+				 ;
+
+suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(0,e);
+														   				RESULT = spc; :}
+				 	  | /* VIDE */						{: RESULT = new ArrayList<Noeud>(); :}
+					  ;
 
 argument ::= type IDF 
 			| /* EMPTY */
