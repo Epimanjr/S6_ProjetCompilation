@@ -2,6 +2,7 @@
  * Analyseur syntaxique
  *
  */ 
+ 
 package fr.ul.miage.projet.generated;
 import java_cup.runtime.Symbol;
 
@@ -34,14 +35,14 @@ terminal NOT;
 terminal RET;
 
 non terminal prog;
-non terminal seq_fonctions, fonction, bloc;
-non terminal seq_instructions, instruction;
+non terminal seq_fonctions, fonction, bloc,suite_seq_fonctions;
+non terminal seq_instructions, instruction,suite_seq_instructions;
 non terminal declaration, suite_declaration, affectation;
 non terminal condition, iteration, expr_booleen, booleen;
 non terminal appel_fonction, param_appel, suite_param_appel, parametres, suite_parametres, argument, retour;
-non terminal expression, facteur, atome, type;
+non terminal expression, facteur, atome, type,valeur;
 non terminal op_secondaire, op_prioritaire, op_booleen;
-non terminal definition_loc,liste_definition_loc,definition_fonction;
+non terminal definition_loc,liste_definition_loc,definition_fonction,definition_arg,liste_definition_arg;
 
 start with prog;
 
@@ -132,7 +133,7 @@ instruction ::= declaration:dec POINTVIRGULE		{:	Noeud n = Noeud.INSTR;
 													:}
 			;		
 
-declaration ::= type:t IDF:idf suite_declaration:sdec;					{:	Noeud n = Noeud.DECLARATION;		/* declaration et suite_declaration à vérifier */
+declaration ::= type:t IDF:idf suite_declaration:sdec					{:	Noeud n = Noeud.DECLARATION;		/* declaration et suite_declaration ï¿½ vï¿½rifier */
 																			n.ajouterFG(t);
 																			n.ajouterFD(idf);
 																			RESULT = sdec;
@@ -272,7 +273,7 @@ atome ::= NOMBRE:nb					{:	Noeud n = Noeud.NOMBRE;
 										n.ajouterFG(tds.rechercher(idf));
 										RESULT = n;
 									:}
-		| PG expression:e PD		{: RESULT = e; :}
+		| PG expression:e PD		{: RESULT = e; :};
 
 type ::= INT		{: RESULT = Noeud.INT; :}
 	   | VOID		{: RESULT = Noeud.VOID; :}
@@ -291,12 +292,19 @@ op_booleen ::= PPQ	{: RESULT = Noeud.PPQ; :}
 			| PGQ	{: RESULT = Noeud.PGQ; :}
 			| PGE	{: RESULT = Noeud.PGE; :}
 			;
-definition_loc::= type:t IDF:idf EGAL valeur:v PV
-			{:TableDesSymboles.insertion(idf,Scope,t,v,rang_loc++);:};
+			
+/* insertion dans la table des symbole*/
+definition_loc::= type:t IDF:idf 
+			{:TableDesSymboles.insertion(idf,Scope,t,"null",rang_loc++);:};
+liste_definition_loc::=definition_loc liste_definition_loc |;
+
+definition_arg::= type:t IDF:idf 
+			{:TableDesSymboles.insertion(idf,Scope,t,"null",rang_loc++);:};
+liste_definition_arg::=definition_arg liste_definition_arg |;
 			
 definition_fonction::=type IDF:idf {:TableDesSymboles.insertion(idf,0);:}
 					PO argument PF AO liste_definition_loc{:TableDesSymboles.setArg_Loc(idf);:}
 					seq_instructions AF;
-
+ 
 /*------fin--------*/
 
