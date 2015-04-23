@@ -27,14 +27,14 @@ public class Noeud {
     private Noeud noeudPere = null;
 
     
-    static String PLUS = "+";
-    static String MOINS = "-";
-    static String FOIS = "*";
-    static String DIVISE = "/";
-    static String PPQ = "<";
-    static String PPE = "<=";
-    static String PGQ = ">";
-    static String PGE = ">=";
+    public static String PLUS = "+";
+    public static String MOINS = "-";
+    public static String FOIS = "*";
+    public static String DIVISE = "/";
+    public static String PPQ = "<";
+    public static String PPE = "<=";
+    public static String PGQ = ">";
+    public static String PGE = ">=";
     
     /**
      * 

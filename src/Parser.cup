@@ -4,6 +4,7 @@
  */ 
 package fr.ul.miage.projet.generated;
 import java_cup.runtime.Symbol;
+import fr.ul.miage.projet.*;
 
 /* contrôle des erreurs de syntaxe : surcharge */
 parser code {:
@@ -15,7 +16,7 @@ parser code {:
 
 /*action code*/
 action code {:
-	
+	TableDesSymboles tds = new TableDesSymboles();
 :}
 
 /* la grammaire */
