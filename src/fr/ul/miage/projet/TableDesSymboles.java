@@ -4,14 +4,16 @@
 package fr.ul.miage.projet;
 import java.util.HashMap;
 
+import fr.ul.miage.projet.generated.ParserCup;
 import Exception.ConflitDeVariable;
 import Exception.IncomptabiliteDeType;
 import Exception.VariableNonDefinie;
 
 public class TableDesSymboles {
-	int Scope=0;
+	public int scopeCourant=0;
 	public int rang_loc=0;
 	public int rang_arg=0;
+	public int index=0;
 	/**
 	 * A chaque variable, on associe ses caractéristiques (stockées dans une hashmap)
 	 */
@@ -93,7 +95,8 @@ public class TableDesSymboles {
 			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
-			
+			caracteristiques.put("index", "+index+");
+			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
 		else
@@ -112,7 +115,8 @@ public class TableDesSymboles {
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
 			caracteristiques.put("rang", "+rang+");
-
+			caracteristiques.put("index", "+index+");
+			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
 		else
@@ -136,6 +140,8 @@ public class TableDesSymboles {
 			if(Assembleur.estChiffre(val.getValeur()) && type=="int"){
 				caracteristiques.put("valeur", val.getValeur());
 				tds.put(var, caracteristiques);
+				caracteristiques.put("index", "+index+");
+				index++;
 			}
 			else{
 				throw new IncomptabiliteDeType("Le type ne correspond pas");
@@ -153,6 +159,7 @@ public class TableDesSymboles {
 		caracteristiques.put("nombre_local",""+ rang_loc+"");
 		rang_loc=0;
 		rang_arg=0;
+		scopeCourant=0;
 		this.tds.put(new Variable(idf, 0), caracteristiques);
 
 	}
@@ -167,7 +174,9 @@ public class TableDesSymboles {
 		HashMap<String, String> caracteristiques = new HashMap<String, String>();
 		
 		caracteristiques.put("type", type);
-		
+		caracteristiques.put("index", "+index+");
+		scopeCourant=index;
+		index++;
 		if (typeparams.length == nomparams.length) {
 			for (int i = 0; i < typeparams.length; i++) {
 				caracteristiques.put("typeparam_" + String.valueOf(i+1), typeparams[i]);
