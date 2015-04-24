@@ -34,6 +34,11 @@ public class Variable {
 		this.scope = 0; //On met le scope à 0 pour déclarer une variable globale
 	}
 	
+	@Override
+	public String toString() {
+		return "Variable [idf=" + idf + ", scope=" + scope + "]";
+	}
+
 	/**
 	 * @return the idf
 	 */

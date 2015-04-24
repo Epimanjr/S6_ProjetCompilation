@@ -16,6 +16,9 @@ parser code {:
 	public void afficherArbreFinal() {
 		System.out.println("----- Affichage de l'arbre final -----");
 		action_obj.arbre.afficherArbre();
+		System.out.println("--------------------------------------\n");
+		System.out.println("----- Affichage de la TDS finale -----");
+		System.out.println(action_obj.tds);
 		System.out.println("--------------------------------------");
 	}
 :}
@@ -24,7 +27,7 @@ parser code {:
 action code {:
 	Arbre arbre = new Arbre();
 	TableDesSymboles tds = new TableDesSymboles();
-	int scopeCourant = -1;
+	int scopeCourant = 0;
 :}
 
 /* la grammaire */
@@ -132,10 +135,10 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 
 declaration ::= IDF:idf 								{: //tds.insertion(); :}
 			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DATA);
-														   Noeud nIDF = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf);
 														   //insertion à faire
 														   n.ajouterFG(nIDF);
-														   n.ajouterFD(new Noeud(Noeud.NOMBRE, nb));
+														   n.ajouterFD(new Noeud(Noeud.NOMBRE, "<C> "+nb));
 														   RESULT = n; :}
 			  ;
 		
@@ -145,20 +148,24 @@ codes ::= fonction:fct codes:cs  						{: cs.add(0,fct);
 		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
-																//fonction à inserer dans tds
+fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.IDF, "[" + scopeCourant + "] <FCT> " + idf);
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
 																n.ajouterFG(nParam);
 																n.ajouterFD(b);
-																//System.out.println(n);
+																String typeParams[] = {""};
+																String nomParams[] = {""};
+																tds.insertion(idf,scopeCourant,t,typeParams,nomParams);
 																RESULT = n; :}
-		   | IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+		   | IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf);
 		   													//fonction à inserer dans tds
 															Noeud nParam = new Noeud(Noeud.PARAMETRES);
 															nParam.ajouterNoeud(p);
 															n.ajouterFG(nParam);
 															n.ajouterFD(b);
+															String typeParams[] = {""};
+															String nomParams[] = {""};
+															tds.insertion(idf,scopeCourant,"void",typeParams,nomParams);
 															RESULT = n; :}
 		   ;
 
@@ -166,10 +173,10 @@ typeFonction ::= INT									{: RESULT = "int"; :}
 			   | VOID									{: RESULT = "void"; :}
 			   ;
 
-block ::= AG contenuBlock:cb AD							{:	scopeCourant++;
-															Noeud n = new Noeud(Noeud.BLOCK, "{}-" + scopeCourant);
+block ::= AG contenuBlock:cb AD							{:	
+															Noeud n = new Noeud(Noeud.BLOCK);
 															n.ajouterNoeud(cb);
-															System.out.println("!!!!!!NOUVEAUBLOC "+n);
+															scopeCourant++;
 															RESULT = n; :} 
 		;
 
@@ -221,10 +228,11 @@ instrReturn ::= RET expression POINTVIRGULE
 			  ;
 
 affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(Noeud.AFFECTATION);
-														   Noeud nIDF = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + scopeCourant + "] <VAR> " + idf);
 														   //insertion à faire
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(e);
+														   tds.insertion(idf,scopeCourant,"type","valeur","rang");
 														   RESULT = n; :}
 			  ;
 
@@ -242,20 +250,21 @@ facteur ::= facteur:f op_prioritaire:op1 valeur:v		{: Noeud n = new Noeud(op1);
 		  | valeur:v									{: RESULT = v; :}
 		  ;
 		
-valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
+valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, "<CST> "+nb); :}
 		 | IDF:idf										{: //Vérifier ici que la variable existe
-		 												   RESULT = new Noeud(Noeud.IDF, idf + ";" + scopeCourant); :}
+		 												   RESULT = new Noeud(Noeud.IDF, "[" + scopeCourant + "] <VAR> " + idf); :}
 		 | PG expression:e PD							{: RESULT = e; :}
 		 | call:c										{: RESULT = c; :}
 		 ;
 
 call ::= IDF:idf PG parametresCall:pc PD				{: //Vérifier ici que la fonction appelée existe
-														   Noeud n = new Noeud(Noeud.CALL, idf + ";" + scopeCourant);
+														   Noeud n = new Noeud(Noeud.CALL, "[" + scopeCourant + "] <APL> " + idf);
 														   n.ajouterNoeud(pc);
 														   RESULT = n; :} 
 	   ;
 
 parametres ::= argument:a suiteParametres:sp			{: sp.add(0,a);
+														   scopeCourant++;
 														   RESULT = sp; :}
 			 | /* VIDE */								{: RESULT = new ArrayList<Noeud>(); :}
 			 ;
@@ -275,7 +284,7 @@ suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(
 				 	  | /* VIDE */						{: RESULT = new ArrayList<Noeud>(); :}
 					  ;
 
-argument ::= type:t IDF:idf								{: Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant); 
+argument ::= type:t IDF:idf								{: Noeud n = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf); 
 														   RESULT = n; :} 
 		   | call:c										{: RESULT = c; :}
 		   ;

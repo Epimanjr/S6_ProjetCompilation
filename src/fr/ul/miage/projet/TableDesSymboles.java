@@ -31,6 +31,15 @@ public class TableDesSymboles {
 		super();
 		this.tds = tds;
 	}
+	
+	@Override
+	public String toString() {
+		String res = "\n";
+		for (Variable v:tds.keySet()){
+			res += "- "+v+"  ---  "+tds.get(v)+"\n";
+		}
+		return res;
+	}
 
 	/**
 	 * Méthode de recherche

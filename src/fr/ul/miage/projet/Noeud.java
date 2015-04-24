@@ -39,12 +39,12 @@ public class Noeud {
     public static String NOMBRE = "NB";
     public static String IDF = "IDF";
     public static String CALL = "CALL";
-    public static String AFFECTATION = "<-";
+    public static String AFFECTATION = "AFFECT";
     public static String WHILE = "WHILE";
     public static String IF = "IF";
     public static String FONCTION = "FCT";
     public static String PARAMETRES = "PARAM";
-    public static String BLOCK = "{}";
+    public static String BLOCK = "BLOC";
     public static String PROG = "PROG";
     public static String DATAS = "DATAS";
     public static String CODES = "CODES";

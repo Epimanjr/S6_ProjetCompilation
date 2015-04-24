@@ -1,10 +1,13 @@
 int f() {
 	if(x>1) {
-		i = 2;
+		x = 2;
+	} else {
+		x = 5;
 	}
 }
 
-void main(int abc){
+void main(int abc, int bcd){
 	int i = 0;
 	i = 6*3;
+	int abc = 15;
 }
