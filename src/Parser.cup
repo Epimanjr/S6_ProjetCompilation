@@ -152,14 +152,16 @@ codes ::= fonction:fct codes:cs  						{: cs.add(0,fct);
 		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] <FCT> " + idf);
+fonction ::= typeFonction:t IDF:idf {: tds.insertion(idf,tds.scopeCourant,t);:}
+
+ PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] <FCT> " + idf);
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
 																n.ajouterFG(nParam);
 																n.ajouterFD(b);
 																String typeParams[] = {""};
 																String nomParams[] = {""};
-																tds.insertion(idf,tds.scopeCourant,t,typeParams,nomParams);
+																tds.setArg_Loc(idf);
 																RESULT = n; :}
 		   | IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
 		   				 									//fonction à inserer dans tds
