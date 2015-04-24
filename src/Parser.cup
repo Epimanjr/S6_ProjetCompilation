@@ -27,6 +27,7 @@ parser code {:
 action code {:
 	Arbre arbre = new Arbre();
 	TableDesSymboles tds = new TableDesSymboles();
+	String type = "";
 :}
 
 /* la grammaire */
@@ -117,7 +118,7 @@ datas ::= data:d datas:ds 								{: ds.add(0,d);
 		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		;
 
-data ::= type:t contenudata:cd POINTVIRGULE 			{: System.out.println("toto");
+data ::= type:t contenudata:cd POINTVIRGULE 			{: type = t;
 														   Noeud n = new Noeud(t, Noeud.DATA);
 										  				   n.ajouterNoeud(cd);
 										  				   System.out.println(cd);
@@ -135,14 +136,15 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 
 declaration ::= IDF:idf 								{: Noeud n = new Noeud(Noeud.DECLARATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
-														   n.ajouterFG(nIDF);
-														   tds.insertion(idf,tds.scopeCourant,"type","null");
+														   n.ajouterFG(nIDF);														   System.out.println("Oooooooooooooooooooooooooooooooooooooooo");
+														   tds.insertion(idf,tds.scopeCourant,type,"null");
+														   System.out.println(tds);
 														   RESULT = n; :}
 			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DECLARATIONAFFECTATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(new Noeud(Noeud.NOMBRE, "<C> "+nb));
-														   tds.insertion(idf,tds.scopeCourant,"type",nb);
+														   tds.insertion(idf,tds.scopeCourant,type,nb);
 														   RESULT = n; :}
 			  ;
 		
@@ -233,11 +235,11 @@ instrReturn ::= RET expression POINTVIRGULE
 			  ;
 
 affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(Noeud.AFFECTATION);
-														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] <VAR> " + idf);
-														   //insertion à faire
+														   Noeud nIDF = new Noeud(Noeud.IDF, "<VAR> index:" + Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)) + " (idf:" + idf + ")");
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(e);
-														   tds.insertion(idf,tds.scopeCourant,e);
+														   tds.existeDansTds(idf,tds.scopeCourant);
+														   System.out.println("toto"+tds.indexDansTds(idf,tds.scopeCourant));
 														   RESULT = n; :}
 			  ;
 
@@ -257,7 +259,7 @@ facteur ::= facteur:f op_prioritaire:op1 valeur:v		{: Noeud n = new Noeud(op1);
 		
 valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, "<CST> "+nb); :}
 		 | IDF:idf										{: //Vérifier ici que la variable existe
-		 												   RESULT = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] <VAR> " + idf); :}
+		 												   RESULT = new Noeud(Noeud.IDF, "<VAR> index:" + Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)) + " (idf:" + idf + ")"); :}
 		 | PG expression:e PD							{: RESULT = e; :}
 		 | call:c										{: RESULT = c; :}
 		 ;

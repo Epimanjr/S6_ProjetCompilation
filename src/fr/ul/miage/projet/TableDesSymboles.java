@@ -46,16 +46,57 @@ public class TableDesSymboles {
 		return res;
 	}
 
+	public void existeDansTds(String i, int s) throws VariableNonDefinie{
+		Variable var = new Variable(i,s);
+		boolean existePas = true;
+		for (Variable v:tds.keySet()){
+			if(v.equals(var)){
+				existePas = false;
+			} else {
+				if(v.getIdf().equals(var.getIdf())) {
+					if(v.getScope()<=var.getScope()) {
+						existePas = false;
+					}
+				}
+			}
+		}
+		if(existePas) {
+			throw new VariableNonDefinie("Le variable "+i+" n'existe pas!!");
+		}
+	}
+	
+	public int indexDansTds(String i, int s) throws VariableNonDefinie{
+		Variable var = new Variable(i,s);
+		int index = -1;
+		for (Variable v:tds.keySet()){
+			if(v.equals(var)){
+				index = new Integer(this.tds.get(v).get("index"));
+				break;
+			} else {
+				if(v.getIdf().equals(var.getIdf())) {
+					if(v.getScope()<=var.getScope()) {
+						index = new Integer(this.tds.get(v).get("index"));
+						break;
+					}
+				}
+			}
+		}
+		return index;
+	}
+	
 	/**
 	 * Méthode de recherche
 	 */
 	public HashMap<String, String> rechercher(Variable var) {
+		HashMap<String, String> res = null;
 		for (Variable v:tds.keySet()){
-			if(v==var){
-				return tds.get(var);
+			if(v.equals(var)){
+				res = tds.get(v);
+				System.out.println(res);
+				break;
 			}
 		}
-		return null;
+		return res;
 	}
 	
 	public HashMap<String, String> rechercher(String idf) {
@@ -132,13 +173,14 @@ public class TableDesSymboles {
 	
 	public void insertion (String idf,int Scope,Noeud val) throws IncomptabiliteDeType, VariableNonDefinie{
 		Variable var=new Variable(idf,Scope);
-		HashMap<String, String> caracteristiques = new HashMap<String, String>();		
-		if (rechercher(var)==null){	
+		HashMap<String, String> caracteristiques = rechercher(var);		
+		if (caracteristiques==null){	
 			throw new VariableNonDefinie("Le variable "+idf+" n'existe pas");
 			}
 		else{
-			String type=this.tds.get(var).get("type");
-			if(Assembleur.estChiffre(val.getValeur()) && type=="int"){
+			String type=caracteristiques.get("type");
+			System.out.println(val);
+			if(Assembleur.estChiffre(val.getValeur())){
 				caracteristiques.put("valeur", val.getValeur());
 				tds.put(var, caracteristiques);
 				caracteristiques.put("index",String.valueOf(index));
@@ -198,10 +240,13 @@ public class TableDesSymboles {
 		caracteristiques.put("index", String.valueOf(index));
 		
 		scopeCourant=index;
+		System.out.println("|||||||||||||||||SCOPECOURANT: "+scopeCourant);
+		System.out.println(this);
 		index++;
 		Variable nouvelleVar = new Variable(idf, scopeCourant);
 		this.tds.put(nouvelleVar, caracteristiques);
 		this.varCourante = nouvelleVar;
+		System.out.println(this);
 
 	}
 		else

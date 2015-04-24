@@ -67,6 +67,23 @@ public class Variable {
 		this.scope = scope;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		System.out.println((this.idf.equals(((Variable)o).idf)));
+		System.out.println((this.scope == ((Variable)o).scope));
+		
+	    return ((this.idf.equals(((Variable)o).idf)) && (this.scope == ((Variable)o).scope));
+	}
+	
+
+	public int compareTo(Variable o) {
+		System.out.println("ahah?");
+		if ((this.idf == o.idf) && (this.scope == o.scope))
+			return 0;
+		else
+			return 1;
+	}
+
 	
 	
 }
