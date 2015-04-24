@@ -100,7 +100,7 @@ start with x;
 x ::= prog												{: :}
 	;
 
-prog ::= codes:cs								{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+prog ::= datas codes:cs									{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
 														   arbre.setRacine(n);
 														   Noeud codes = new Noeud(Noeud.CODES);
 														   //System.out.print("CS: ");
