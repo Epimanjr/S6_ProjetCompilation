@@ -180,7 +180,6 @@ typeFonction ::= INT									{: RESULT = "int"; :}
 block ::= AG contenuBlock:cb AD							{:	
 															Noeud n = new Noeud(Noeud.BLOCK);
 															n.ajouterNoeud(cb);
-															tds.scopeCourant++;
 															RESULT = n; :} 
 		;
 
