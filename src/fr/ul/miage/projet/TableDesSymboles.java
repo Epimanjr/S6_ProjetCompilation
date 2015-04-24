@@ -95,7 +95,7 @@ public class TableDesSymboles {
 			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
-			caracteristiques.put("index", ""+index+"");
+			caracteristiques.put("index", String.valueOf(index));
 			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
@@ -115,7 +115,7 @@ public class TableDesSymboles {
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
 			caracteristiques.put("rang", ""+rang+"");
-			caracteristiques.put("index", ""+index+"");
+			caracteristiques.put("index", String.valueOf(index));
 			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
@@ -140,7 +140,7 @@ public class TableDesSymboles {
 			if(Assembleur.estChiffre(val.getValeur()) && type=="int"){
 				caracteristiques.put("valeur", val.getValeur());
 				tds.put(var, caracteristiques);
-				caracteristiques.put("index", ""+index+"");
+				caracteristiques.put("index",String.valueOf(index));
 				index++;
 			}
 			else{
@@ -155,8 +155,8 @@ public class TableDesSymboles {
 	 */
 	public void setArg_Loc(String idf){
 		HashMap<String, String> caracteristiques = new HashMap<String, String>();
-		caracteristiques.put("nombre_argument",""+rang_arg+"");
-		caracteristiques.put("nombre_local",""+ rang_loc+"");
+		caracteristiques.put("nombre_argument",String.valueOf(rang_arg));
+		caracteristiques.put("nombre_local",String.valueOf(rang_loc));
 		rang_loc=0;
 		rang_arg=0;
 		scopeCourant=0;
@@ -174,9 +174,7 @@ public class TableDesSymboles {
 		HashMap<String, String> caracteristiques = new HashMap<String, String>();
 		
 		caracteristiques.put("type", type);
-		caracteristiques.put("index", "+index+");
-		scopeCourant=index;
-		index++;
+		caracteristiques.put("index", String.valueOf(index));
 		if (typeparams.length == nomparams.length) {
 			for (int i = 0; i < typeparams.length; i++) {
 				caracteristiques.put("typeparam_" + String.valueOf(i+1), typeparams[i]);
@@ -184,7 +182,10 @@ public class TableDesSymboles {
 			}
 		}
 		
-		this.tds.put(new Variable(idf, scope), caracteristiques);
+		scopeCourant=index;
+		index++;
+		this.tds.put(new Variable(idf, scopeCourant), caracteristiques);
+
 	}
 		else
 			throw new ConflitDeVariable("Cette fonction "+idf+" existe dèja");
