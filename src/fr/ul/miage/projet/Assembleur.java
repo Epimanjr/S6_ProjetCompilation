@@ -147,7 +147,7 @@ public class Assembleur {
     public void generer_instruction(Noeud fils) {
         switch (fils.getValeur()) {
             // Cas d'une affectation
-            case "affectation":
+            case "AFFECT":
                 generer_affectation(fils);
                 break;
         }
@@ -163,7 +163,7 @@ public class Assembleur {
         generer_expression(fils.getFils().get(1));
         // Affectation
         res += "POP(r0)\n"
-                + "ST(r0, "+fils.getFils().get(0).getValeur()+")";
+                + "ST(r0, "+fils.getFils().get(0).getValeur()+")\n";
     }
 
     /**
@@ -174,7 +174,7 @@ public class Assembleur {
     public void generer_expression(Noeud noeud) {
        if (estChiffre(noeud.getValeur())){
     	   res+= "CMOVE("+noeud.getValeur()+",r0)\n"
-           		+ "PUSH (r0)";
+           		+ "PUSH (r0)\n";
        }
        else
     	   if(estLettre(noeud.getValeur().charAt(0))){
