@@ -51,6 +51,8 @@ public class Noeud {
     public static String VRAI = "VRAI";
     public static String FAUX = "FAUX";
     public static String DATA = "DATA";
+    public static String DECLARATION = "DECLA";
+    public static String DECLARATIONAFFECTATION = "D+A";
     
     /**
      * 

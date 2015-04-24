@@ -133,12 +133,16 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 				   | /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 				   ;
 
-declaration ::= IDF:idf 								{: //tds.insertion(); :}
-			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DATA);
+declaration ::= IDF:idf 								{: Noeud n = new Noeud(Noeud.DECLARATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf);
-														   //insertion à faire
+														   n.ajouterFG(nIDF);
+														   tds.insertion(idf,scopeCourant,"type","null");
+														   RESULT = n; :}
+			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DECLARATIONAFFECTATION);
+														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf);
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(new Noeud(Noeud.NOMBRE, "<C> "+nb));
+														   tds.insertion(idf,scopeCourant,"type",nb);
 														   RESULT = n; :}
 			  ;
 		
@@ -187,7 +191,7 @@ contenuBlock ::= contenuBlock:cb instruction:i			{: //System.out.println(i);
 			   ;
 
 instruction ::= affectation:af							{: RESULT = af; :}
-			  | type:t affectation:af					{: RESULT = af; :}
+			  | data:da									{: RESULT = da; :}
 			  | instrReturn:re							{: RESULT = re; :}
 			  | call:ca									{: RESULT = ca; :}
 			  | condition:co							{: RESULT = co; :}
