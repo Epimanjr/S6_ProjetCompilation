@@ -91,6 +91,7 @@ non terminal Noeud condition;
 non terminal Noeud booleen;
 non terminal Noeud iteration;
 
+precedence left INT;
 
 start with x;
 
