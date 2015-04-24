@@ -14,6 +14,7 @@ public class TableDesSymboles {
 	public int rang_loc=0;
 	public int rang_arg=0;
 	public int index=0;
+	public Variable varCourante;
 	/**
 	 * A chaque variable, on associe ses caractéristiques (stockées dans une hashmap)
 	 */
@@ -154,14 +155,13 @@ public class TableDesSymboles {
 	 * mise à jour de la fonction
 	 */
 	public void setArg_Loc(String idf){
-		HashMap<String, String> caracteristiques = new HashMap<String, String>();
+		HashMap<String, String> caracteristiques = this.tds.get(this.varCourante);
 		caracteristiques.put("nombre_argument",String.valueOf(rang_arg));
 		caracteristiques.put("nombre_local",String.valueOf(rang_loc));
 		rang_loc=0;
 		rang_arg=0;
-		scopeCourant=0;
-		this.tds.put(new Variable(idf, scopeCourant), caracteristiques);
-
+		this.tds.put(this.varCourante, caracteristiques);
+		this.varCourante = null;
 	}
 	
 	/**
@@ -199,7 +199,9 @@ public class TableDesSymboles {
 		
 		scopeCourant=index;
 		index++;
-		this.tds.put(new Variable(idf, scopeCourant), caracteristiques);
+		Variable nouvelleVar = new Variable(idf, scopeCourant);
+		this.tds.put(nouvelleVar, caracteristiques);
+		this.varCourante = nouvelleVar;
 
 	}
 		else
