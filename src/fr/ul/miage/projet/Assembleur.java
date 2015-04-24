@@ -53,7 +53,7 @@ public class Assembleur {
  	
  	 // test si un caractere est une constante
 
- 	public boolean static estChiffre(String string) {
+ 	public static boolean estChiffre(String string) {
 		try {
 			Integer.parseInt(string + "");
 			return true;
@@ -224,7 +224,6 @@ public class Assembleur {
     }
 
 
-    @override
     public String toString() {
         return res;
     }
