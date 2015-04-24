@@ -22,7 +22,7 @@ parser code {:
 		System.out.println("--------------------------------------");
 	}
 :}
-
+ 
 /*action code*/
 action code {:
 	Arbre arbre = new Arbre();
@@ -158,7 +158,7 @@ fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b {: Noeud n = new 
 																tds.insertion(idf,scopeCourant,t,typeParams,nomParams);
 																RESULT = n; :}
 		   | IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf);
-		   													//fonction à inserer dans tds
+		   				 									//fonction à inserer dans tds
 															Noeud nParam = new Noeud(Noeud.PARAMETRES);
 															nParam.ajouterNoeud(p);
 															n.ajouterFG(nParam);
@@ -232,7 +232,7 @@ affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(No
 														   //insertion à faire
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(e);
-														   tds.insertion(idf,scopeCourant,"type","valeur","rang");
+														   tds.insertion(idf,scopeCourant,e);
 														   RESULT = n; :}
 			  ;
 
@@ -285,7 +285,8 @@ suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(
 					  ;
 
 argument ::= type:t IDF:idf								{: Noeud n = new Noeud(Noeud.IDF, "[" + scopeCourant + "] " + idf); 
-														   RESULT = n; :} 
+														   RESULT = n; 
+														   tds.insertion(idf,scopeCourant,t,"null",tds.rang_arg++);:} 
 		   | call:c										{: RESULT = c; :}
 		   ;
 			

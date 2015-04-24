@@ -5,11 +5,13 @@ package fr.ul.miage.projet;
 import java.util.HashMap;
 
 import Exception.ConflitDeVariable;
+import Exception.IncomptabiliteDeType;
+import Exception.VariableNonDefinie;
 
 public class TableDesSymboles {
-	String Scope="global";
-	int rang_loc=0;
-	int rang_arg=0;
+	int Scope=0;
+	public int rang_loc=0;
+	public int rang_arg=0;
 	/**
 	 * A chaque variable, on associe ses caractéristiques (stockées dans une hashmap)
 	 */
@@ -84,19 +86,44 @@ public class TableDesSymboles {
 	 * Méthode d'insertion d'une variable locale ou argument
 	 * @throws ConflitDeVariable 
 	 */
-	public void insertion(String idf, int scope, String type, String val,String rang) throws ConflitDeVariable {
+	public void insertion(String idf, int scope, String type, String val,int rang) throws ConflitDeVariable {
 		Variable var=new Variable(idf, scope);
 		if (rechercher(var)==null){	
 			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
-			caracteristiques.put("rang", rang);
+			caracteristiques.put("rang", "+rang+");
 
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
 		else
 			throw new ConflitDeVariable("Le variable "+idf+" existe dèja");
 	}
+	/**
+	 * Méthode d'insertion d'une variable locale ou argument
+	 * @throws IncomptabiliteDeType 
+	 * @throws VariableNonDefinie 
+	 * @throws ConflitDeVariable 
+	 */
+	
+	public void insertion (String idf,int Scope,Noeud val) throws IncomptabiliteDeType, VariableNonDefinie{
+		Variable var=new Variable(idf,Scope);
+		HashMap<String, String> caracteristiques = new HashMap<String, String>();		
+		if (rechercher(var)==null){	
+			throw new VariableNonDefinie("Le variable "+idf+" n'existe pas");
+			}
+		else{
+			String type=this.tds.get(var).get("type");
+			if(Assembleur.estChiffre(val.getValeur()) && type=="int"){
+				caracteristiques.put("valeur", val.getValeur());
+				tds.put(var, caracteristiques);
+			}
+			else{
+				throw new IncomptabiliteDeType("Le type ne correspond pas");
+
+			}
+		}
+		}
 	/**
 	 * Méthode de renitialisation du nombre d'arguments, du nombre de variable local et 
 	 * mise à jour de la fonction
