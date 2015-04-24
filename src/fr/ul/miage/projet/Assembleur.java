@@ -75,7 +75,7 @@ public class Assembleur {
     /**
      * Génération du code assembleur pour tout le programme.
      */
-    private void generer_prog() {
+    public void generer_prog() {
         // Initialisation
         res += ".include beta.uasm\n"
                 + "CMOVE(pile,SP)\n"
@@ -95,7 +95,7 @@ public class Assembleur {
     /**
      * Génération du code assembleur pour les variables globales.
      */
-    private void generer_data() {
+    public void generer_data() {
         // Parcours de la Table des Symboles
         Set set = this.tds.getTds().keySet();
         Iterator it = set.iterator();
@@ -114,7 +114,7 @@ public class Assembleur {
     /**
      * Génération du code assembleur pour le code.
      */
-    private void generer_code() {
+    public void generer_code() {
         // Récupération de la racine de l'arbre
         Noeud racine = this.arbre.getRacine();
         // Parcours de tous les fils de l'arbre
@@ -129,7 +129,7 @@ public class Assembleur {
      *
      * @param fils Noeud
      */
-    private void generer_fonction(Noeud fils) {
+    public void generer_fonction(Noeud fils) {
         // Initialisation (label)
         res += fils.getValeur() + ":\n";
         // Parcours de chaque fils du Noeud
@@ -144,7 +144,7 @@ public class Assembleur {
      *
      * @param fils2 Noeud.
      */
-    private void generer_instruction(Noeud fils) {
+    public void generer_instruction(Noeud fils) {
         switch (fils.getValeur()) {
             // Cas d'une affectation
             case "affectation":
@@ -158,7 +158,7 @@ public class Assembleur {
      *
      * @param fils Noeud.
      */
-    private void generer_affectation(Noeud fils) {
+    public void generer_affectation(Noeud fils) {
         // Génération de l'expression du fils DROIT
         generer_expression(fils.getFils().get(1));
         // Affectation
@@ -171,7 +171,7 @@ public class Assembleur {
      *
      * @param noeud Noeud
      */
-    private void generer_expression(Noeud noeud) {
+    public void generer_expression(Noeud noeud) {
        if (estChiffre(noeud.getValeur())){
     	   res+= "CMOVE("+noeud.getValeur()+",r0)\n"
            		+ "PUSH (r0)";
@@ -218,7 +218,7 @@ public class Assembleur {
      *
      * @param noeud Noeud
      */
-    private void generer_expression_operateur(Noeud fils) {
+    public void generer_expression_operateur(Noeud fils) {
         // Génération de l'expression du fils DROIT
     	
     }
