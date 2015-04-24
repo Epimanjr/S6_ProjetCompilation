@@ -14,7 +14,7 @@ public class Noeud {
     /**
      * Valeur du Noeud.
      */
-    private final String valeur;
+    private String valeur;
 
     /**
      * La liste des Noeuds enfants.
@@ -160,6 +160,12 @@ public class Noeud {
      */
     @Override
     public String toString() {
+    	if (this.type == null) this.type = "NULL";
+    	if (this.valeur == null) this.valeur = "NULL";
+    	
+    	String res = "type : " + this.type + "\n";
+    	res += "Valeur : " + this.valeur + "\n";
+    	/*
         String res = "Valeur : " + this.valeur + "\n";
         res += "Noeud père : ";
         if (this.noeudPere == null) {
@@ -174,7 +180,7 @@ public class Noeud {
             for (Noeud n : this.getFils()) {
                 res += n.getValeur() + " ";
             }
-        }
+        }*/
         return res;
     }
     
@@ -184,9 +190,7 @@ public class Noeud {
     * Ajoute une liste de fils à un noeud.
     */
     public void ajouterNoeud(ArrayList<Noeud> liste){
-    	for(int i = 0; i<liste.size()-1; i++){
-    		this.fils.add(liste.get(i));
-    	}
+    	this.fils.addAll(liste);
     }
 
     /**

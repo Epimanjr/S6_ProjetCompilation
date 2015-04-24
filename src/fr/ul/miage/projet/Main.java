@@ -11,42 +11,25 @@ import java.io.FileReader;
 import java.io.FileNotFoundException;
 
 public class Main {
-	
 
 	/**
 	 * @param args
 	 */
-
 	public static void main(String[] args) {
-		
-		
 		FileReader file;
-		
 		try {
 			file = new FileReader(args[0]);
-			
-			
-			
-			ParserCup parser = new ParserCup(
-								new Yylex(file)
-							);
-							
+			ParserCup parser = new ParserCup(new Yylex(file));			
 			parser.parse();
-			
-			
-		}
-		catch(FileNotFoundException e) {
+			parser.afficherArbreFinal();
+		} catch(FileNotFoundException e) {
 			System.out.println("File not found");
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("...Erreur de syntaxe ");
-			
 			e.printStackTrace();
-			
 			System.exit(1);
 		}
 	}
-	
 	
 	public static void print(Object o){
 		System.out.println(o);

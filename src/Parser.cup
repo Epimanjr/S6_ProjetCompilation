@@ -13,11 +13,18 @@ parser code {:
 	public void unrecovered_syntax_error(Symbol cur_token) throws Exception{
 		throw new Exception("Erreur");
 	}
+	public void afficherArbreFinal() {
+		System.out.println("----- Affichage de l'arbre final -----");
+		action_obj.arbre.afficherArbre();
+		System.out.println("--------------------------------------");
+	}
 :}
 
 /*action code*/
 action code {:
+	Arbre arbre = new Arbre();
 	TableDesSymboles tds = new TableDesSymboles();
+	int scopeCourant = -1;
 :}
 
 /* la grammaire */
@@ -87,78 +94,98 @@ start with x;
 /*------debut-------*/
 
 
-x ::= prog
+x ::= prog												{: :}
+	;
+
+prog ::= codes:cs								{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+														   arbre.setRacine(n);
+														   Noeud codes = new Noeud(Noeud.CODES);
+														   //System.out.print("CS: ");
+														   codes.ajouterNoeud(cs);
+														   //System.out.println(cs);
+														   //System.out.println(codes);
+														   n.ajouterFG(codes);
+														   //System.out.println(n);
+														   RESULT = n; :} 
+	   ;
+
+datas ::= data:d datas:ds 								{: ds.add(0,d);
+														   RESULT = ds; :}
+		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		;
 
-prog ::= datas:ds codes:cs		{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
-								   Noeud datas = new Noeud(Noeud.DATAS);	/* On crée un noeud pour les datas et un noeud pour les codes */
-								   Noeud codes = new Noeud(Noeud.CODES);
-								   n.ajouterFG(datas);
-								   n.ajouterFD(codes);
-								   datas.ajouterNoeud(ds);					/* Les datas seront les fils du noeud DATAS et les codes ceux du noeud CODE */
-								   codes.ajouterNoeud(cs);
-								   RESULT = n; :} 
-		;
+data ::= type:t contenudata:cd POINTVIRGULE 			{: System.out.println("toto");
+														   Noeud n = new Noeud(t, Noeud.DATA);
+										  				   n.ajouterNoeud(cd);
+										  				   System.out.println(cd);
+										 			 	   RESULT = n; :}
+	   ;
 
-datas ::= datas:ds data:d		{: ds.add(0,d);
-								   RESULT = ds; :}
-		| /* VIDE */			{: RESULT = new ArrayList<Noeud>(); :}
-		;
-
-data ::= type:t contenudata:cd POINTVIRGULE {: Noeud n = new Noeud(t, Noeud.DATA);
-										  	   n.ajouterNoeud(cd);
-										  	   RESULT = n; :}
-		;
-
-contenudata ::= declaration:d suiteContenudata:scd				{: scd.add(0,d); 
-															   	   RESULT = scd; :}
-			;
+contenudata ::= declaration:d suiteContenudata:scd		{: scd.add(0,d); 
+														   RESULT = scd; :}
+			  ;
 			
 suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 															   	   RESULT = scd; :}
-				   | /* VIDE */
+				   | /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 				   ;
 
-declaration ::= IDF:idf 				{: //tds.insertion(); :}
-			  | IDF:idf EGAL NOMBRE:nb	{: //tds.insertion(); :}
+declaration ::= IDF:idf 								{: //tds.insertion(); :}
+			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DATA);
+														   Noeud nIDF = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+														   //insertion à faire
+														   n.ajouterFG(nIDF);
+														   n.ajouterFD(new Noeud(Noeud.NOMBRE, nb));
+														   RESULT = n; :}
 			  ;
 		
-codes ::= codes:cs fonction:fct		{: cs.add(0,fct);
-									   RESULT = cs; :}
+codes ::= fonction:fct codes:cs  						{: cs.add(0,fct);
+														   //System.out.println(cs);
+									   		 		   	   RESULT = cs; :}
+		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b  {: Noeud n = new Noeud(t, tds.rechercher(idf));
+fonction ::= typeFonction:t IDF:idf PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+																//fonction à inserer dans tds
 																Noeud nParam = new Noeud(Noeud.PARAMETRES);
 																nParam.ajouterNoeud(p);
 																n.ajouterFG(nParam);
 																n.ajouterFD(b);
+																//System.out.println(n);
 																RESULT = n; :}
-			| IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud("void", tds.rechercher(idf));
-																Noeud nParam = new Noeud(Noeud.PARAMETRES);
-																nParam.ajouterNoeud(p);
-																n.ajouterFG(nParam);
-																n.ajouterFD(b);
-																RESULT = n; :}
-			;
+		   | IDF:idf PG parametres:p PD block:b			{:	Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+		   													//fonction à inserer dans tds
+															Noeud nParam = new Noeud(Noeud.PARAMETRES);
+															nParam.ajouterNoeud(p);
+															n.ajouterFG(nParam);
+															n.ajouterFD(b);
+															RESULT = n; :}
+		   ;
 
+typeFonction ::= INT									{: RESULT = "int"; :}
+			   | VOID									{: RESULT = "void"; :}
+			   ;
 
-block ::= AG contenuBlock:cb AD							{:	Noeud n = new Noeud(Noeud.BLOCK);
+block ::= AG contenuBlock:cb AD							{:	scopeCourant++;
+															Noeud n = new Noeud(Noeud.BLOCK, "{}-" + scopeCourant);
 															n.ajouterNoeud(cb);
+															System.out.println("!!!!!!NOUVEAUBLOC "+n);
 															RESULT = n; :} 
 		;
 
-contenuBlock ::= contenuBlock:cb instruction:i			{: cb.add(0,i);
+contenuBlock ::= contenuBlock:cb instruction:i			{: //System.out.println(i);
+														   cb.add(0,i);
 														   RESULT = cb; :}
-				| /* VIDE */ 							{: RESULT = new ArrayList<Noeud>(); :}
-				;
+			   | /* VIDE */ 							{: RESULT = new ArrayList<Noeud>(); :}
+			   ;
 
 instruction ::= affectation:af							{: RESULT = af; :}
-			| data:da									{: RESULT = da; :}
-			| instrReturn:re							{: RESULT = re; :}
-			| call:ca									{: RESULT = ca; :}
-			| condition:co								{: RESULT = co; :}
-			| iteration:it								{: RESULT = it; :}
-			;
+			  | type:t affectation:af					{: RESULT = af; :}
+			  | instrReturn:re							{: RESULT = re; :}
+			  | call:ca									{: RESULT = ca; :}
+			  | condition:co							{: RESULT = co; :}
+			  | iteration:it							{: RESULT = it; :}
+			  ;
 
 condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
@@ -190,50 +217,53 @@ exprBooleen ::= valeur:v operateurBooleen:opb exprBooleen:e	{: Noeud n = new Noe
 			  ;
 
 instrReturn ::= RET expression POINTVIRGULE
-			| RET POINTVIRGULE
-			;
+			  | RET POINTVIRGULE
+			  ;
 
 affectation ::= IDF:idf EGAL expression:e POINTVIRGULE	{: Noeud n = new Noeud(Noeud.AFFECTATION);
-														   Noeud nIDF = new Noeud(Noeud.IDF, tds.rechercher(idf));
+														   Noeud nIDF = new Noeud(Noeud.IDF, idf + ";" + scopeCourant);
+														   //insertion à faire
 														   n.ajouterFG(nIDF);
 														   n.ajouterFD(e);
 														   RESULT = n; :}
-			;
+			  ;
 
 expression ::= expression:e op_secondaire:op2 facteur:f	{: Noeud n = new Noeud(op2);
 														   n.ajouterFG(e);
 														   n.ajouterFD(f);
 														   RESULT = n; :}
-			| facteur:f									{: RESULT = f; :}
-			;
+			 | facteur:f								{: RESULT = f; :}
+			 ;
 			
 facteur ::= facteur:f op_prioritaire:op1 valeur:v		{: Noeud n = new Noeud(op1);
 														   n.ajouterFG(f);
 														   n.ajouterFD(v);
 														   RESULT = n; :}
-		| valeur:v										{: RESULT = v; :}
-		;
+		  | valeur:v									{: RESULT = v; :}
+		  ;
 		
 valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
-		| IDF:idf										{: RESULT = new Noeud(Noeud.IDF, tds.rechercher(idf)); :}
-		| PG expression:e PD							{: RESULT = e; :}
-		| call:c										{: RESULT = c; :}
-		;
+		 | IDF:idf										{: //Vérifier ici que la variable existe
+		 												   RESULT = new Noeud(Noeud.IDF, idf + ";" + scopeCourant); :}
+		 | PG expression:e PD							{: RESULT = e; :}
+		 | call:c										{: RESULT = c; :}
+		 ;
 
-call ::= IDF:idf PG parametresCall:pc PD				{: Noeud n = new Noeud(Noeud.CALL, tds.rechercher(idf));
+call ::= IDF:idf PG parametresCall:pc PD				{: //Vérifier ici que la fonction appelée existe
+														   Noeud n = new Noeud(Noeud.CALL, idf + ";" + scopeCourant);
 														   n.ajouterNoeud(pc);
 														   RESULT = n; :} 
-		;
+	   ;
 
 parametres ::= argument:a suiteParametres:sp			{: sp.add(0,a);
 														   RESULT = sp; :}
-			| /* VIDE */								{: RESULT = new ArrayList<Noeud>(); :}
-			;
+			 | /* VIDE */								{: RESULT = new ArrayList<Noeud>(); :}
+			 ;
 			
 suiteParametres ::= VIRGULE argument:a suiteParametres:sp {: sp.add(0,a);
 															 RESULT = sp; :}
 				  | /* VIDE */							  {: RESULT = new ArrayList<Noeud>(); :}
-			;
+				  ;
 
 parametresCall ::= expression:e suiteParametresCall:spc {: spc.add(0,e);
 														   RESULT = spc; :}
@@ -245,24 +275,21 @@ suiteParametresCall ::= VIRGULE expression:e suiteParametresCall:spc {: spc.add(
 				 	  | /* VIDE */						{: RESULT = new ArrayList<Noeud>(); :}
 					  ;
 
-argument ::= type IDF 
-			| call
-			;
+argument ::= type:t IDF:idf								{: Noeud n = new Noeud(Noeud.IDF, idf + ";" + scopeCourant); 
+														   RESULT = n; :} 
+		   | call:c										{: RESULT = c; :}
+		   ;
 			
 type ::= INT											{: RESULT = "int"; :}
 	   ;
-
-typeFonction ::= INT									{: RESULT = "int"; :}
-			   | VOID									{: RESULT = "void"; :}
-			   ;
 
 op_secondaire ::= PLUS									{: RESULT = Noeud.PLUS; :}
 				| MOINS									{: RESULT = Noeud.MOINS; :}
 				;
 			
 op_prioritaire ::= FOIS									{: RESULT = Noeud.FOIS; :}
-				| DIVISE								{: RESULT = Noeud.DIVISE; :}
-				;
+				 | DIVISE								{: RESULT = Noeud.DIVISE; :}
+				 ;
 
 operateurBooleen ::= PPQ								{: RESULT = Noeud.PPQ; :}
 				   | PPE								{: RESULT = Noeud.PPE; :}
