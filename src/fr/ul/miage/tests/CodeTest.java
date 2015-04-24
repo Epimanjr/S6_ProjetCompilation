@@ -8,7 +8,7 @@ import fr.ul.miage.projet.*;
 /**
  * Classe de test pour vérifier si les "datas" sont bien interprétés.
  */
-public class DataTest {
+public class CodeTest {
 
 	/**
 	 * Méthode principale, créer une TDS, un arbre vide et génère l'assembleur!
@@ -24,6 +24,15 @@ public class DataTest {
 		}
 		// Création d'un arbre vide
 		Arbre a = new Arbre();
+		// Création d'une fonction f
+		Noeud fonctionF = new Noeud("f");
+		Noeud affectation = new Noeud("AFFECT");
+		affectation.ajouterFils(new Noeud("i"));
+		affectation.ajouterFils(new Noeud("6"));
+		fonctionF.ajouterFils(affectation);
+		Noeud fonctionG = new Noeud("g");
+		a.getRacine().ajouterFils(fonctionF);
+		a.getRacine().ajouterFils(fonctionG);
 		// Traduction vers le code assembleur !
 		Assembleur asm = new Assembleur(a, tds);
 		asm.generer_prog();
