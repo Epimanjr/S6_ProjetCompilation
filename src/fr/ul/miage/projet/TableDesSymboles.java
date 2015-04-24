@@ -95,7 +95,7 @@ public class TableDesSymboles {
 			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
-			caracteristiques.put("index", "+index+");
+			caracteristiques.put("index", ""+index+"");
 			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
@@ -114,8 +114,8 @@ public class TableDesSymboles {
 			HashMap<String, String> caracteristiques = new HashMap<String, String>();		
 			caracteristiques.put("type", type);
 			caracteristiques.put("valeur", val);
-			caracteristiques.put("rang", "+rang+");
-			caracteristiques.put("index", "+index+");
+			caracteristiques.put("rang", ""+rang+"");
+			caracteristiques.put("index", ""+index+"");
 			index++;
 			this.tds.put(new Variable(idf, scope), caracteristiques);
 		}
@@ -140,7 +140,7 @@ public class TableDesSymboles {
 			if(Assembleur.estChiffre(val.getValeur()) && type=="int"){
 				caracteristiques.put("valeur", val.getValeur());
 				tds.put(var, caracteristiques);
-				caracteristiques.put("index", "+index+");
+				caracteristiques.put("index", ""+index+"");
 				index++;
 			}
 			else{
