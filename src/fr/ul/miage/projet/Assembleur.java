@@ -16,17 +16,17 @@ public class Assembleur {
     /**
      * Arbre.
      */
-    private final Arbre arbre;
+    public final Arbre arbre;
 
     /**
      * Table des symboles.
      */
-    private final TableDesSymboles tds;
+    public final TableDesSymboles tds;
 
     /**
      * Résultat en assembleur.
      */
-    private String res;
+    public String res;
 
     /**
      * Constructeur qui initialise les variables
