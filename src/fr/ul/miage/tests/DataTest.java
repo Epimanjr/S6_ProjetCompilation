@@ -17,7 +17,8 @@ public class DataTest {
 		// Création d'une table des symboles avec des variables globales
 		TableDesSymboles tds = new TableDesSymboles();
 		try {
-			tds.insertion("i", 0, "var", "5");
+			tds.insertionData("i", 0, "var", "int", "5");
+			tds.insertionData("j", 0, "var", "int", "50");
 		} catch(ConflitDeVariable ex) {
 			System.out.println("Erreur, conflit de variable.");
 		}

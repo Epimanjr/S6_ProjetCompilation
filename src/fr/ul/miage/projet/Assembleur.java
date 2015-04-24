@@ -79,17 +79,17 @@ public class Assembleur {
         // Initialisation
         res += ".include beta.uasm\n"
                 + "CMOVE(pile,SP)\n"
-                + "BR(debut)";
+                + "BR(debut)\n";
         // Génération des DATA
         generer_data();
         // Début
         res += "debut:\n"
-                + "CALL(main)"
-                + "HALT()";
+                + "CALL(main)\n"
+                + "HALT()\n";
         //Génération du code
         generer_code();
         // Fin
-        res += "pile:";
+        res += "pile:\n";
     }
 
     /**

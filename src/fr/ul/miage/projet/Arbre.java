@@ -18,7 +18,7 @@ public class Arbre {
      * Constructeur vide.
      */
     public Arbre() {
-    	this.racine = null;
+    	this.racine = new Noeud("racine");
     }
 
     /**
