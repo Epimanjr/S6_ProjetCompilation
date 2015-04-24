@@ -222,4 +222,10 @@ public class Assembleur {
         // Génération de l'expression du fils DROIT
     	
     }
+
+
+    @override
+    public String toString() {
+        return res;
+    }
 }
