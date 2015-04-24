@@ -160,7 +160,7 @@ public class TableDesSymboles {
 		rang_loc=0;
 		rang_arg=0;
 		scopeCourant=0;
-		this.tds.put(new Variable(idf, 0), caracteristiques);
+		this.tds.put(new Variable(idf, scopeCourant), caracteristiques);
 
 	}
 	
