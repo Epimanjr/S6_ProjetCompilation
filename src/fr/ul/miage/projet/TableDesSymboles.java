@@ -92,7 +92,6 @@ public class TableDesSymboles {
 		for (Variable v:tds.keySet()){
 			if(v.equals(var)){
 				res = tds.get(v);
-				System.out.println(res);
 				break;
 			}
 		}
@@ -179,7 +178,6 @@ public class TableDesSymboles {
 			}
 		else{
 			String type=caracteristiques.get("type");
-			System.out.println(val);
 			if(Assembleur.estChiffre(val.getValeur())){
 				caracteristiques.put("valeur", val.getValeur());
 				tds.put(var, caracteristiques);
@@ -240,13 +238,10 @@ public class TableDesSymboles {
 		caracteristiques.put("index", String.valueOf(index));
 		
 		scopeCourant=index;
-		System.out.println("|||||||||||||||||SCOPECOURANT: "+scopeCourant);
-		System.out.println(this);
 		index++;
 		Variable nouvelleVar = new Variable(idf, scopeCourant);
 		this.tds.put(nouvelleVar, caracteristiques);
 		this.varCourante = nouvelleVar;
-		System.out.println(this);
 
 	}
 		else

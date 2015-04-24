@@ -69,9 +69,6 @@ public class Variable {
 
 	@Override
 	public boolean equals(Object o) {
-		System.out.println((this.idf.equals(((Variable)o).idf)));
-		System.out.println((this.scope == ((Variable)o).scope));
-		
 	    return ((this.idf.equals(((Variable)o).idf)) && (this.scope == ((Variable)o).scope));
 	}
 	
