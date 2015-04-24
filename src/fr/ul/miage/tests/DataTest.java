@@ -2,6 +2,7 @@
 package fr.ul.miage.tests;
 
 // Tous les imports nécessaire
+import Exception.*;
 import fr.ul.miage.projet.*;
 
 /**
@@ -15,7 +16,11 @@ public class DataTest {
 	public static void main(String[] args) {
 		// Création d'une table des symboles avec des variables globales
 		TableDesSymboles tds = new TableDesSymboles();
-		tds.insertion("i", 0, "var", "5");
+		try {
+			tds.insertion("i", 0, "var", "5");
+		} catch(ConflitDeVariable ex) {
+			System.out.println("Erreur, conflit de variable.");
+		}
 		// Création d'un arbre vide
 		Arbre a = new Arbre();
 		// Traduction vers le code assembleur !
