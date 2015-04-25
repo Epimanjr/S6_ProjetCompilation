@@ -172,7 +172,8 @@ typeFonction ::= INT									{: RESULT = "int"; :}
 			   | VOID									{: RESULT = "void"; :}
 			   ;
 
-block ::= AG contenuBlock:cb AD							{:	RESULT = cb; :} 
+block ::= AG contenuBlock:cb AD							{:	tds.scopeCourant=0;
+															RESULT = cb; :} 
 		;
 
 contenuBlock ::= contenuBlock:cb instruction:i			{: if(i.getType()!=Noeud.DECLARATION) {
@@ -191,9 +192,9 @@ instruction ::= affectation:af							{: RESULT = af; :}
 			  | instrReturn:re							{: RESULT = re; :}
 			  | call:ca									{: RESULT = ca; :}
 			  | condition:co							{: RESULT = co; :}
-			  | iteration:it							{: RESULT = it; :}
+			  | iteration:it							{: RESULT =  it; :}
 			  ;
-
+ 
 condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
 																n.ajouterNoeud(b1);

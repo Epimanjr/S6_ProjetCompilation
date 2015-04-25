@@ -84,17 +84,21 @@ public class TableDesSymboles {
 	
 	public int indexDansTds(String i, int s) throws VariableNonDefinie{
 		Variable var = new Variable(i,s);
+		System.out.println("ICICICICICICICICICICII: "+var);
 		int index = -1;
 		for (Variable v:tds.keySet()){
 			if(v.equals(var)){
 				index = new Integer(this.tds.get(v).get("index"));
 				break;
-			} else {
-				if(v.getIdf().equals(var.getIdf())) {
-					if(v.getScope()<=var.getScope()) {
-						index = new Integer(this.tds.get(v).get("index"));
-						break;
-					}
+			}
+		}
+		if(index==-1) {
+			int scope = this.getVariableWithIndex(s).getScope();
+			var = new Variable(i,scope);
+			for (Variable v:tds.keySet()){
+				if(v.equals(var)){
+					index = new Integer(this.tds.get(v).get("index"));
+					break;
 				}
 			}
 		}
