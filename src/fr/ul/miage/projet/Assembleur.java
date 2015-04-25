@@ -194,9 +194,9 @@ public class Assembleur {
         int nb_param = new Integer(map.get("nombre_argument"));
         res += "\tALLOCATE(" + nb_param + ")\n";
         // On met chaque paramètre dans la pile
-        
+
         res += "\nCALL(" + fils.getValeur() + ")\n"
-             + "\tDEALLOCATE(" + nb_param + ")\n"
+             + "\tDEALLOCATE(" + nb_param + ")\n";
     }
 
     /**
