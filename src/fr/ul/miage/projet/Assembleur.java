@@ -29,6 +29,11 @@ public class Assembleur {
     public String res;
 
     /**
+     * Map des opérateurs
+     */
+    public HashMap<String, String> mapOp = new HashMap<>();
+
+    /**
      * Constructeur qui initialise les variables
      *
      * @param arbre Arbre
@@ -38,7 +43,13 @@ public class Assembleur {
         this.arbre = arbre;
         this.tds = tds;
         this.res = "";
+        // Initialisation map
+        mapOp.put("+", "ADD");
+        mapOp.put("-", "SUB");
+        mapOp.put("*", "MUL");
+        mapOp.put("/", "DIV");
     }
+
  // test si un caractere est une idf
  	public boolean estLettre(Character c) {
  		if (c != null) {
@@ -65,13 +76,10 @@ public class Assembleur {
 
 	}
  	//test si c'est un opérateur
- 	public boolean estOperateur(String string){
- 		if(string=="+" ||	string=="-" || string=="/" || string=="*")
- 			return true;
- 		else
-		return false;
- 		
+ 	public boolean estOperateur(String str){
+        return str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/");
  	}
+
     /**
      * Génération du code assembleur pour tout le programme.
      */
@@ -181,45 +189,23 @@ public class Assembleur {
      * @param noeud Noeud
      */
     public void generer_expression(Noeud noeud) {
-       if (estChiffre(noeud.getValeur())){
-    	   res+= "CMOVE("+noeud.getValeur()+",r0)\n"
-           		+ "PUSH (r0)\n";
-       }
-       else
-    	   if(estLettre(noeud.getValeur().charAt(0))){
-    		   res+= "LD("+noeud.getValeur()+",r0)\n"
-    	        		+ "PUSH (r0)";
-    	   }
-    	   else 
-    		   if(estOperateur(noeud.getValeur())){
-    				   
-    			   // genreration de l'expression du fils droit
-    			   generer_expression(noeud.getFils().get(1));
-    			// genreration de l'expression du fils gauche
-    			   generer_expression(noeud.getFils().get(0));
-    			   res+="POP(r2)\n"
-    					   +"POP(r1)\n";
-        		   if(noeud.getValeur()=="+"){
-        			   res+="ADD(r1,r2,r3)\n";
-        		   }
-        		   else {
-        			   if (noeud.getValeur()=="-"){
-            			   res+="SUB(r1,r2,r3)\n";
-        				   
-        			   }
-        			   else{
-        				   if (noeud.getValeur()=="/"){
-                			   res+="DIV(r1,r2,r3)\n";
-        				   }
-        				   else{
-                			   res+="MUL(r1,r2,r3)\n";
-
-        				   }
-        			   }
-   
-    		   }
-    				   }
-       }
+        if (estChiffre(noeud.getValeur())){
+            res+= "CMOVE("+noeud.getValeur()+",r0)\n"
+                + "PUSH (r0)\n";
+        }
+        else if(estLettre(noeud.getValeur().charAt(0))){
+            res+= "LD("+noeud.getValeur()+",r0)\n"
+                + "PUSH (r0)";
+        }
+        else if(estOperateur(noeud.getValeur())){	   
+            // Génération des expressions
+            generer_expression(noeud.getFils().get(1));
+    		generer_expression(noeud.getFils().get(0));
+    		res+="POP(r2)\n"
+    			+"POP(r1)\n";
+                + mapOp.get(noeud.getValeur()) + "(r1, r2, r3)";
+    	}
+    }
     
    
     /**

@@ -27,7 +27,7 @@ public class CodeTest {
 		// Création d'une fonction f
 		Noeud fonctionF = new Noeud("f");
 		Noeud affectation = new Noeud("AFFECT");
-		affectation.ajouterFils(new Noeud("i"));
+		affectation.ajouterFils(new Noeud("idf", "i"));
 		affectation.ajouterFils(new Noeud("6"));
 		fonctionF.ajouterFils(affectation);
 		Noeud fonctionG = new Noeud("g");
