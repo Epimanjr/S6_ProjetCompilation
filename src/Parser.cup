@@ -131,16 +131,14 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 				   | /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 				   ;
 
-declaration ::= IDF:idf 								{: Noeud n = new Noeud(Noeud.DECLARATION);
-														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
+declaration ::= IDF:idf 								{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++);
+															RESULT = new Noeud("toto");
+														   :}
+			  | IDF:idf EGAL NOMBRE:nb					{: tds.insertion(idf,tds.scopeCourant,type,nb);
+			  											   Noeud n = new Noeud(Noeud.AFFECTATION);
+														   Noeud nIDF = new Noeud(Noeud.IDF, Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)));
 														   n.ajouterFG(nIDF);
-														   tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++);
-														   RESULT = n; :}
-			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DECLARATIONAFFECTATION);
-														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
-														   n.ajouterFG(nIDF);
-														   n.ajouterFD(new Noeud(Noeud.NOMBRE, "<C> "+nb));
-														   tds.insertion(idf,tds.scopeCourant,type,nb);
+														   n.ajouterFD(new Noeud(Noeud.NOMBRE, nb));
 														   RESULT = n; :}
 			  ;
 		
@@ -254,7 +252,7 @@ valeur ::= NOMBRE:nb									{: RESULT = new Noeud(Noeud.NOMBRE, nb); :}
 		 ;
 
 call ::= IDF:idf PG parametresCall:pc PD				{: //Vérifier ici que la fonction appelée existe
-														   Noeud n = new Noeud(Noeud.CALL, "[" + tds.scopeCourant + "] <APL> " + idf);
+														   Noeud n = new Noeud(Noeud.CALL, idf);
 														   n.ajouterNoeud(pc);
 														   RESULT = n; :} 
 	   ;
