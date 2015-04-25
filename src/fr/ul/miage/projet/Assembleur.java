@@ -177,7 +177,26 @@ public class Assembleur {
             case "RETURN":
                 generer_return(fils);
                 break;
+            case "CALL":
+                generer_call(fils);
+                break;
         }
+    }
+
+    /**
+     * Génération du code assembleur d'un call
+     *
+     * @param fils Noeud
+     */
+    public void generer_call(Noeud fils) {
+        // Récupération de nombre d'arguments
+        HashMap<String, String> map = tds.rechercher(fils.getValeur());
+        int nb_param = new Integer(map.get("nombre_argument"));
+        res += "\tALLOCATE(" + nb_param + ")\n";
+        // On met chaque paramètre dans la pile
+        
+        res += "\nCALL(" + fils.getValeur() + ")\n"
+             + "\tDEALLOCATE(" + nb_param + ")\n"
     }
 
     /**
