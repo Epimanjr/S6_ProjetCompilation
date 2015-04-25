@@ -145,7 +145,7 @@ public class Assembleur {
      * @param fils2 Noeud.
      */
     public void generer_instruction(Noeud fils) {
-        switch (fils.getValeur()) {
+        switch (fils.getType()) {
             // Cas d'une affectation
             case "AFFECT":
                 generer_affectation(fils);
@@ -162,8 +162,17 @@ public class Assembleur {
         // Génération de l'expression du fils DROIT
         generer_expression(fils.getFils().get(1));
         // Affectation
-        res += "POP(r0)\n"
-                + "ST(r0, "+fils.getFils().get(0).getValeur()+")\n";
+        res += "POP(r0)\n";
+        int index = new Integer(fils.getFils().get(0).getValeur());
+        Variable var = tds.getVariableWithIndex(index);
+        // Cas variable globale
+        if(var.getScope() == 0) {
+            res += "ST(r0, "+var.getIdf()+")\n";
+        } else {
+            int rang = new Integer(tds.getTds().get(var).get("rang"));
+            res += "PUTFRAME(r0, " + (rang + 1) * 4 + ")\n";
+        }
+                
     }
 
     /**
