@@ -20,6 +20,8 @@ parser code {:
 		System.out.println("----- Affichage de la TDS finale -----");
 		System.out.println(action_obj.tds);
 		System.out.println("--------------------------------------");
+		Assembleur asm = new Assembleur(action_obj.arbre, action_obj.tds);
+		System.out.println(asm.generer_prog());
 	}
 :}
  
@@ -132,7 +134,7 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 declaration ::= IDF:idf 								{: Noeud n = new Noeud(Noeud.DECLARATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
 														   n.ajouterFG(nIDF);
-														   tds.insertion(idf,tds.scopeCourant,type,"indéfinie",tds.rang_loc++);
+														   tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++);
 														   RESULT = n; :}
 			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DECLARATIONAFFECTATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);

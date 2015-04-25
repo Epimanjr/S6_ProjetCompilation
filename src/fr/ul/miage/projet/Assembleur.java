@@ -82,7 +82,7 @@ public class Assembleur {
     /**
      * Génération du code assembleur pour tout le programme.
      */
-    public void generer_prog() {
+    public String generer_prog() {
         // Initialisation
         res += ".include beta.uasm\n"
                 + "CMOVE(pile,SP)\n"
@@ -91,12 +91,13 @@ public class Assembleur {
         generer_data();
         // Début
         res += "debut:\n"
-                + "CALL(main)\n"
-                + "HALT()\n";
+                + "\tCALL(main)\n"
+                + "\tHALT()\n";
         //Génération du code
         generer_code();
         // Fin
         res += "pile:\n";
+        return res;
     }
 
     /**
@@ -111,7 +112,7 @@ public class Assembleur {
             Variable var = (Variable) it.next();
             if (var.getScope() == 0) { // Si c'est une variable globale
                 // Si c'est un INT
-                if (this.tds.getTds().get(var).get("type").equals("int") && this.tds.getTds().get(var).get("cat").equals("var")) {
+                if (this.tds.getTds().get(var).get("type").equals("int")) {
                     res += "\t" + var.getIdf() + ":LONG(" + this.tds.getTds().get(var).get("valeur") + ")\n";
                 }
             }
@@ -169,15 +170,15 @@ public class Assembleur {
         // Génération de l'expression du fils DROIT
         generer_expression(fils.getFils().get(1));
         // Affectation
-        res += "POP(r0)\n";
+        res += "\tPOP(r0)\n";
         int index = new Integer(fils.getFils().get(0).getValeur());
         Variable var = tds.getVariableWithIndex(index);
         // Cas variable globale
         if(var.getScope() == 0) {
-            res += "ST(r0, "+var.getIdf()+")\n";
+            res += "\tST(r0, "+var.getIdf()+")\n";
         } else {
             int rang = new Integer(tds.getTds().get(var).get("rang"));
-            res += "PUTFRAME(r0, " + (rang + 1) * 4 + ")\n";
+            res += "\tPUTFRAME(r0, " + (rang + 1) * 4 + ")\n";
         }
                 
     }
@@ -188,21 +189,25 @@ public class Assembleur {
      * @param noeud Noeud
      */
     public void generer_expression(Noeud noeud) {
-        if (estChiffre(noeud.getValeur())){
-            res+= "CMOVE("+noeud.getValeur()+",r0)\n"
-                + "PUSH (r0)\n";
+        
+        if(noeud.getValeur() != null) {
+            if (estChiffre(noeud.getValeur())){
+                res+= "\tCMOVE("+noeud.getValeur()+",r0)\n"
+                    + "\tPUSH (r0)\n";
+            }
+            else if(estLettre(noeud.getValeur().charAt(0))){
+                res+= "\tLD("+noeud.getValeur()+",r0)\n"
+                    + "\tPUSH (r0)";
+            }
         }
-        else if(estLettre(noeud.getValeur().charAt(0))){
-            res+= "LD("+noeud.getValeur()+",r0)\n"
-                + "PUSH (r0)";
-        }
-        else if(estOperateur(noeud.getValeur())){	   
+        
+        if(estOperateur(noeud.getType())){	   
             // Génération des expressions
             generer_expression(noeud.getFils().get(1));
     		generer_expression(noeud.getFils().get(0));
-    		res+="POP(r2)\n"
-    			+"POP(r1)\n"
-                + mapOp.get(noeud.getValeur()) + "(r1, r2, r3)";
+    		res+="\tPOP(r2)\n"
+    			+"\tPOP(r1)\n"
+                + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n";
     	}
     }
     
