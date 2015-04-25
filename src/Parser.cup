@@ -150,7 +150,7 @@ codes ::= fonction:fct codes:cs  						{: cs.add(0,fct);
 		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf {: tds.insertion(idf,tds.scopeCourant,t);:}
+fonction ::= typeFonction:t IDF:idf {: tds.insertion(idf,0,t);:}
 
  PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.FONCTION, idf);
 																n.ajouterNoeud(b);
@@ -158,7 +158,7 @@ fonction ::= typeFonction:t IDF:idf {: tds.insertion(idf,tds.scopeCourant,t);:}
 																String nomParams[] = {""};
 																tds.setArg_Loc(idf);
 																RESULT = n; :}
-		   | IDF:idf {: tds.insertion(idf,tds.scopeCourant,"void");:}
+		   | IDF:idf {: tds.insertion(idf,0,"void");:}
 
  PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.FONCTION, idf);
 																n.ajouterNoeud(b);

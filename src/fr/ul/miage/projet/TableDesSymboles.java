@@ -253,6 +253,7 @@ public class TableDesSymboles {
 			throw new ConflitDeVariable("Cette fonction "+idf+" existe dèja");
 	}
 	
+	//insertion d'une fonction
 	public void insertion(String idf, int scope, String type) throws ConflitDeVariable {
 		Variable var=new Variable(idf, scope);
 		if (rechercher(var)==null){
@@ -263,7 +264,7 @@ public class TableDesSymboles {
 		
 		scopeCourant=index;
 		index++;
-		Variable nouvelleVar = new Variable(idf, scopeCourant);
+		Variable nouvelleVar = new Variable(idf,0);
 		this.tds.put(nouvelleVar, caracteristiques);
 		this.varCourante = nouvelleVar;
 
