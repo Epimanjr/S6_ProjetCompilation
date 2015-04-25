@@ -115,11 +115,18 @@ public class TableDesSymboles {
 		return res;
 	}
 	
+	/**
+	 * retourne les caractéristiques d'une fonction dont l'idf est donné en paramètre
+	 * @param idf
+	 * @return
+	 */
 	public HashMap<String, String> rechercher(String idf) {
 		Variable var = new Variable(idf,0);
 		for (Variable v:tds.keySet()){
-			if(v==var){
-				return tds.get(var);
+			if(v.getIdf().equals(var.getIdf())) {
+				if(!this.tds.get(v).containsKey("valeur")) {
+					return this.tds.get(v);
+				}
 			}
 		}
 		return null;
