@@ -4,7 +4,7 @@
 
 int i, j,k;
 
-intf f(){
+int f(){
 	int i;
 	
 	i = 1;
@@ -12,7 +12,7 @@ intf f(){
 	return j;
 }
 
-intf g(){
+int g(){
 	int j, l2, l3, l4;
 	
 	l2 = 2; l3 = 3; l4 = 4;
