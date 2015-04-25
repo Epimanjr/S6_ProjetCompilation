@@ -2,7 +2,7 @@
  * Classe qui représenter la table des symboles
  */
 package fr.ul.miage.projet;
-import java.util.HashMap;
+import java.util.*;
 
 import fr.ul.miage.projet.generated.ParserCup;
 import Exception.ConflitDeVariable;
@@ -35,6 +35,23 @@ public class TableDesSymboles {
 	public TableDesSymboles(HashMap<Variable, HashMap<String, String>> tds) {
 		super();
 		this.tds = tds;
+	}
+
+	/**
+	 * Récupère la variable en fonction de son index dans la TDS.
+	 * Retourne null si non trouvé
+	 */
+	public Variable getVariableWithIndex(int index) {
+		Set cles = tds.keySet();
+		Iterator it = cles.iterator();
+		while (it.hasNext()){
+		   Variable var = (Variable)it.next();
+		   HashMap<String, String> map = tds.get(var);
+		   if(map.get("index").equals(""+index)) {
+		   		return var;
+		   }
+		}
+		return null;
 	}
 	
 	@Override
