@@ -69,6 +69,7 @@ non terminal Noeud data;
 non terminal ArrayList<Noeud> contenudata;
 non terminal ArrayList<Noeud> suiteContenudata;
 non terminal Noeud declaration;
+non terminal Noeud declarationconstante;
 non terminal ArrayList<Noeud> codes;
 non terminal Noeud fonction;
 non terminal ArrayList<Noeud> parametres;
@@ -122,19 +123,21 @@ data ::= type:t contenudata:cd POINTVIRGULE 			{: type = t;
 										 			 	   RESULT = n; :}
 	   ;
 
-contenudata ::= declaration:d suiteContenudata:scd		{: scd.add(0,d); 
-														   RESULT = scd; :}
+contenudata ::= declaration:d suiteContenudata:scd		    {: RESULT = scd; :}
+			  | declarationconstante:d suiteContenudata:scd {: scd.add(0,d); 
+														     RESULT = scd; :}										   
 			  ;
 			
-suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
-															   	   RESULT = scd; :}
-				   | /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
+suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd		     {: RESULT = scd; :}
+				   | VIRGULE declarationconstante:d suiteContenudata:scd {: scd.add(0,d); 
+																		  RESULT = scd; :}
+				   | /* VIDE */										     {: RESULT = new ArrayList<Noeud>(); :}
 				   ;
 
-declaration ::= IDF:idf 								{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++);
-															RESULT = new Noeud("toto");
-														   :}
-			  | IDF:idf EGAL NOMBRE:nb					{: tds.insertion(idf,tds.scopeCourant,type,nb);
+declaration ::= IDF:idf 								{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++); :}
+			  ;
+
+declarationconstante ::= IDF:idf EGAL NOMBRE:nb			{: tds.insertion(idf,tds.scopeCourant,type,nb);
 			  											   Noeud n = new Noeud(Noeud.AFFECTATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)));
 														   n.ajouterFG(nIDF);
@@ -172,15 +175,19 @@ typeFonction ::= INT									{: RESULT = "int"; :}
 block ::= AG contenuBlock:cb AD							{:	RESULT = cb; :} 
 		;
 
-contenuBlock ::= contenuBlock:cb instruction:i			{: 
-														   cb.add(0,i);
+contenuBlock ::= contenuBlock:cb instruction:i			{: if(i.getType()!=Noeud.DECLARATION) {
+														   	cb.add(0,i);
+														   }
 														   RESULT = cb; :}
 			   | /* VIDE */ 							{: RESULT = new ArrayList<Noeud>(); :}
 			   ;
 
 instruction ::= affectation:af							{: RESULT = af; :}
-			  | data:da									{: 
-			  											   RESULT = da; :}
+			  | data:da									{: Noeud n = new Noeud(Noeud.DECLARATION);
+			  											   if(da.getFils().size()>0) {
+			  											   		n = da.getFils().get(0);
+			  											   }
+			  											   RESULT = n; :}
 			  | instrReturn:re							{: RESULT = re; :}
 			  | call:ca									{: RESULT = ca; :}
 			  | condition:co							{: RESULT = co; :}
