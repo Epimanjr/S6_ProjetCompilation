@@ -265,7 +265,6 @@ call ::= IDF:idf PG parametresCall:pc PD				{: //Vérifier ici que la fonction a
 	   ;
 
 parametres ::= argument:a suiteParametres:sp			{: sp.add(0,a);
-														   tds.scopeCourant++;
 														   RESULT = sp; :}
 			 | /* VIDE */								{: RESULT = new ArrayList<Noeud>(); :}
 			 ;
