@@ -53,6 +53,7 @@ public class Noeud {
     public static String DATA = "DATA";
     public static String DECLARATION = "DECLA";
     public static String DECLARATIONAFFECTATION = "D+A";
+    public static String RETURN = "RETURN";
     
     /**
      * 

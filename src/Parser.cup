@@ -106,7 +106,7 @@ prog ::= datas codes:cs									{: Noeud n = new Noeud(Noeud.PROG);		/* On crée
 														   Noeud codes = new Noeud(Noeud.CODES);
 														   codes.ajouterNoeud(cs);
 														   n.ajouterFG(codes);
-														   RESULT = n; :} 
+														   RESULT = n; :}
 	   ;
 
 datas ::= data:d datas:ds 								{: ds.add(0,d);
@@ -188,7 +188,8 @@ contenuBlock ::= contenuBlock:cb instruction:i			{:
 			   ;
 
 instruction ::= affectation:af							{: RESULT = af; :}
-			  | data:da									{: RESULT = da; :}
+			  | data:da									{: 
+			  											   RESULT = da; :}
 			  | instrReturn:re							{: RESULT = re; :}
 			  | call:ca									{: RESULT = ca; :}
 			  | condition:co							{: RESULT = co; :}
@@ -224,7 +225,9 @@ exprBooleen ::= valeur:v operateurBooleen:opb exprBooleen:e	{: Noeud n = new Noe
 			  | valeur:v									{: RESULT = v; :}
 			  ;
 
-instrReturn ::= RET expression POINTVIRGULE
+instrReturn ::= RET expression:e POINTVIRGULE		    {: Noeud n = new Noeud(Noeud.RETURN); 
+														   n.ajouterFG(e);
+														   RESULT = n; :}
 			  | RET POINTVIRGULE
 			  ;
 
