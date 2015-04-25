@@ -172,15 +172,12 @@ public class Assembleur {
         switch (fils.getType()) {
             // Cas d'une affectation
             case "AFFECT":
-            	res += "\ntiti";
             	generer_affectation(fils);
                 break;
             case "RETURN":
-            	res += "\ntoto";
                 generer_return(fils);
                 break;
             case "CALL":
-            	res += "\ntutu";
                 generer_call(fils);
                 break;
         }
@@ -198,7 +195,6 @@ public class Assembleur {
         res += "\tALLOCATE(" + nb_param + ")\n";
         // On met chaque paramètre dans la pile
         for (int i = 0; i < nb_param; i++) {
-        	res += "toto";
 			generer_expression(fils.getFils().get(i));
 		}
         res += "\tCALL(" + fils.getValeur() + ")\n"
