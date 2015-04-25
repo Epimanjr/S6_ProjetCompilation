@@ -180,7 +180,7 @@ contenuBlock ::= contenuBlock:cb instruction:i			{: if(i.getType()!=Noeud.DECLAR
 														   	cb.add(0,i);
 														   }
 														   RESULT = cb; :}
-			   | /* VIDE */ 							{: RESULT = new ArrayList<Noeud>(); :}
+			   | /* VIDE */  							{: RESULT = new ArrayList<Noeud>(); :}
 			   ;
 
 instruction ::= affectation:af							{: RESULT = af; :}
