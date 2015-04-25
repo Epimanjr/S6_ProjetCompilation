@@ -32,6 +32,8 @@ public class Assembleur {
      */
     public HashMap<String, String> mapOp = new HashMap<>();
 
+    private String fonctionCourante = "";
+
     /**
      * Constructeur qui initialise les variables
      *
@@ -139,12 +141,26 @@ public class Assembleur {
      */
     public void generer_fonction(Noeud fils) {
         // Initialisation (label)
+        fonctionCourante = fils.getValeur();
+        // Recherche du nombre de variables locales
+        HashMap<String, String> map = tds.rechercher(fils.getValeur());
+        int nb_var_loc = new Integer(map.get("nombre_local"));
         res += fils.getValeur() + ":\n";
+        res += "\tPUSH(LP)\n"
+             + "\tPUSH(BP)\n"
+             + "\tMOVE(SP, BP)\n"
+             + "\tALLOCATE(" + nb_var_loc + ")\n";
         // Parcours de chaque fils du Noeud
         fils.getFils().stream().forEach((fils2) -> {
             // Génération de l'instruction
             generer_instruction(fils2);
         });
+        // Fin de la fonction
+        res += "ret_" + fils.getValeur() + ":\n"
+             + "\tDESALLOCATE(" + nb_var_loc + ")\n"
+             + "\tPOP(BP)\n"
+             + "\tPOP(LP)\n"
+             + "\tRTN()\n";
     }
 
     /**
@@ -158,7 +174,26 @@ public class Assembleur {
             case "AFFECT":
                 generer_affectation(fils);
                 break;
+            case "RETURN":
+                generer_return(fils);
+                break;
         }
+    }
+
+    /**
+     * Génération du code assembleur d'un return
+     *
+     * @param fils Noeud
+     */
+    public void generer_return(Noeud fils) {
+        // Génération de l'expression du fils
+        generer_expression(fils.getFils().get(0));
+        // Recherche du nombre de paramètres
+        HashMap<String, String> map = tds.rechercher(fonctionCourante);
+        int nb_param = new Integer(map.get("nombre_argument"));
+        res += "\tPOP(r0)\n"
+             + "PUTFRAME((3+" + nb_param + ")*(-4), rO)"
+             + "BR(ret_" + fonctionCourante + ")";
     }
 
     /**
