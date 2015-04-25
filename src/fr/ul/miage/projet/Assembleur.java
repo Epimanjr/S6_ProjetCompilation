@@ -157,7 +157,7 @@ public class Assembleur {
         });
         // Fin de la fonction
         res += "ret_" + fils.getValeur() + ":\n"
-             + "\tDESALLOCATE(" + nb_var_loc + ")\n"
+             + "\tDEALLOCATE(" + nb_var_loc + ")\n"
              + "\tPOP(BP)\n"
              + "\tPOP(LP)\n"
              + "\tRTN()\n";
@@ -192,8 +192,8 @@ public class Assembleur {
         HashMap<String, String> map = tds.rechercher(fonctionCourante);
         int nb_param = new Integer(map.get("nombre_argument"));
         res += "\tPOP(r0)\n"
-             + "PUTFRAME((3+" + nb_param + ")*(-4), rO)"
-             + "BR(ret_" + fonctionCourante + ")";
+             + "\tPUTFRAME((3+" + nb_param + ")*(-4), r0)\n"
+             + "\tBR(ret_" + fonctionCourante + ")\n";
     }
 
     /**
