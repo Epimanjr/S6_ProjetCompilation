@@ -62,8 +62,8 @@ public class Noeud {
      *
      * @param valeur La valeur du Noeud.
      */
-    public Noeud(String valeur) {
-        this.valeur = valeur;
+    public Noeud(String type) {
+        this.type = type;
         this.fils = new ArrayList<>();
     }
     

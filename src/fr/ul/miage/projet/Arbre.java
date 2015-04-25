@@ -53,7 +53,10 @@ public class Arbre {
         for (int i = 0; i < indent; i++) {
             indentation += "\t";
         }
-        System.out.println(indentation + noeud.getValeur());
+        String aafficher = indentation + noeud.getType();
+        if (noeud.getValeur() != null)
+        	aafficher += " " + noeud.getValeur();
+        System.out.println(aafficher);
         if (!noeud.estUneFeuille()) // On fait un appel récursif
         {
             for (Noeud n : noeud.getFils()) {
