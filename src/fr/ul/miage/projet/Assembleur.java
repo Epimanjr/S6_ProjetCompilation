@@ -3,8 +3,7 @@
  */
 package fr.ul.miage.projet;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -202,7 +201,7 @@ public class Assembleur {
             generer_expression(noeud.getFils().get(1));
     		generer_expression(noeud.getFils().get(0));
     		res+="POP(r2)\n"
-    			+"POP(r1)\n";
+    			+"POP(r1)\n"
                 + mapOp.get(noeud.getValeur()) + "(r1, r2, r3)";
     	}
     }
