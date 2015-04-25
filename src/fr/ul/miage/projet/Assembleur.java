@@ -172,12 +172,15 @@ public class Assembleur {
         switch (fils.getType()) {
             // Cas d'une affectation
             case "AFFECT":
-                generer_affectation(fils);
+            	res += "\ntiti";
+            	generer_affectation(fils);
                 break;
             case "RETURN":
+            	res += "\ntoto";
                 generer_return(fils);
                 break;
             case "CALL":
+            	res += "\ntutu";
                 generer_call(fils);
                 break;
         }
@@ -194,8 +197,11 @@ public class Assembleur {
         int nb_param = new Integer(map.get("nombre_argument"));
         res += "\tALLOCATE(" + nb_param + ")\n";
         // On met chaque paramètre dans la pile
-
-        res += "\nCALL(" + fils.getValeur() + ")\n"
+        for (int i = 0; i < nb_param; i++) {
+        	res += "toto";
+			generer_expression(fils.getFils().get(i));
+		}
+        res += "\tCALL(" + fils.getValeur() + ")\n"
              + "\tDEALLOCATE(" + nb_param + ")\n";
     }
 
@@ -232,7 +238,7 @@ public class Assembleur {
             res += "\tST(r0, "+var.getIdf()+")\n";
         } else {
             int rang = new Integer(tds.getTds().get(var).get("rang"));
-            res += "\tPUTFRAME(r0, " + (rang + 1) * 4 + ")\n";
+            res += index+"\tPUTFRAME(r0, " + (rang + 1) * 4 + ")\n";
         }
                 
     }
@@ -244,24 +250,29 @@ public class Assembleur {
      */
     public void generer_expression(Noeud noeud) {
         
-        if(noeud.getValeur() != null) {
-            if (estChiffre(noeud.getValeur())){
-                res+= "\tCMOVE("+noeud.getValeur()+",r0)\n"
-                    + "\tPUSH (r0)\n";
-            }
-            else if(estLettre(noeud.getValeur().charAt(0))){
-                res+= "\tLD("+noeud.getValeur()+",r0)\n"
-                    + "\tPUSH (r0)";
-            }
-        }
-        
-        if(estOperateur(noeud.getType())){	   
-            // Génération des expressions
-            generer_expression(noeud.getFils().get(1));
-    		generer_expression(noeud.getFils().get(0));
-    		res+="\tPOP(r2)\n"
-    			+"\tPOP(r1)\n"
-                + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n";
+    	if(noeud.getType()=="CALL") {
+    		generer_call(noeud);
+    	} else {
+	        if(noeud.getValeur() != null) {
+	            if (estChiffre(noeud.getValeur())){
+	                res+= "\tCMOVE("+noeud.getValeur()+",r0)\n"
+	                    + "\tPUSH (r0)\n";
+	            }
+	            else if(estLettre(noeud.getValeur().charAt(0))){
+	                res+= "\tLD("+noeud.getValeur()+",r0)\n"
+	                    + "\tPUSH (r0)";
+	            }
+	        }
+	        
+	        if(estOperateur(noeud.getType())){	   
+	            // Génération des expressions
+	            generer_expression(noeud.getFils().get(1));
+	    		generer_expression(noeud.getFils().get(0));
+	    		res+="\tPOP(r2)\n"
+	    			+"\tPOP(r1)\n"
+	                + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n"
+	    			+ "\tPUSH(r3)\n";
+	    	}
     	}
     }
     
