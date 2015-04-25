@@ -27,7 +27,7 @@ parser code {:
 action code {:
 	Arbre arbre = new Arbre();
 	TableDesSymboles tds = new TableDesSymboles();
-	String type = "";
+	String type = "int";
 :}
 
 /* la grammaire */
@@ -132,7 +132,7 @@ suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd	{: scd.add(0,d);
 declaration ::= IDF:idf 								{: Noeud n = new Noeud(Noeud.DECLARATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
 														   n.ajouterFG(nIDF);
-														   tds.insertion(idf,tds.scopeCourant,type,"indéfinie");
+														   tds.insertion(idf,tds.scopeCourant,type,"indéfinie",tds.rang_loc++);
 														   RESULT = n; :}
 			  | IDF:idf EGAL NOMBRE:nb					{: Noeud n = new Noeud(Noeud.DECLARATIONAFFECTATION);
 														   Noeud nIDF = new Noeud(Noeud.IDF, "[" + tds.scopeCourant + "] " + idf);
