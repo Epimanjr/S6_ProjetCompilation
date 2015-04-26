@@ -1,14 +1,12 @@
-int f() {
-	int x = 0;
-	if(x>1) {
-		x = 2;
-	} else {
-		x = 5;
-	}
+int i;
+int toto(int abc, int bcd){
+	i = 0;
 }
 
-void main(int abc, int bcd){
-	int i = 0;
-	i = 6*3;
-	int abc = 15;
+void main(int a){
+	i = 5 * 6 * 9 / 8;
+}
+
+int g(){
+	i = 2;
 }

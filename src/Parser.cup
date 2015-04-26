@@ -30,6 +30,7 @@ action code {:
 	Arbre arbre = new Arbre();
 	TableDesSymboles tds = new TableDesSymboles();
 	String type = "int";
+	boolean insererAvantAffectation = false;
 :}
 
 /* la grammaire */
@@ -65,7 +66,7 @@ non terminal prog;
 non terminal String type;
 non terminal String typeFonction;
 non terminal ArrayList<Noeud> datas;
-non terminal Noeud data;
+non terminal ArrayList<Noeud> data;
 non terminal ArrayList<Noeud> contenudata;
 non terminal ArrayList<Noeud> suiteContenudata;
 non terminal Noeud declaration;
@@ -93,8 +94,9 @@ non terminal String operateurBooleen;
 non terminal Noeud condition;
 non terminal Noeud booleen;
 non terminal Noeud iteration;
+non terminal toto;
 
-precedence left INT;
+/*precedence left INT;*/
 
 start with x;
 
@@ -104,28 +106,23 @@ start with x;
 x ::= prog												{: :}
 	;
 
-prog ::= datas codes:cs									{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+prog ::= data codes:cs									{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
 														   arbre.setRacine(n);
-														   
 														   n.ajouterNoeud(cs);
-														   
+														   RESULT = n; :}
+	   | codes:cs										{: Noeud n = new Noeud(Noeud.PROG);		/* On crée un noeud de départ */
+														   arbre.setRacine(n);
+														   n.ajouterNoeud(cs);
 														   RESULT = n; :}
 	   ;
 
-datas ::= data:d datas:ds 								{: ds.add(0,d);
-														   RESULT = ds; :}
-		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
-		;
-
-data ::= type:t contenudata:cd POINTVIRGULE 			{: type = t;
-														   Noeud n = new Noeud(t, Noeud.DATA);
-										  				   n.ajouterNoeud(cd);
-										 			 	   RESULT = n; :}
-	   ;
+data ::= type:t contenudata:cd POINTVIRGULE
+		| data type:t contenudata:cd POINTVIRGULE
+      ;
 
 contenudata ::= declaration:d suiteContenudata:scd		    {: RESULT = scd; :}
 			  | declarationconstante:d suiteContenudata:scd {: scd.add(0,d); 
-														     RESULT = scd; :}										   
+														       RESULT = scd; :}										   
 			  ;
 			
 suiteContenudata ::= VIRGULE declaration:d suiteContenudata:scd		     {: RESULT = scd; :}
@@ -150,50 +147,54 @@ codes ::= fonction:fct codes:cs  						{: cs.add(0,fct);
 		| /* VIDE */									{: RESULT = new ArrayList<Noeud>(); :}
 		; 
 	
-fonction ::= typeFonction:t IDF:idf {: tds.insertion(idf,0,t);:}
+fonction ::= type:t IDF:idf {: tds.insertion(idf,0,t);:}
 
- PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.FONCTION, idf);
-																n.ajouterNoeud(b);
-																String typeParams[] = {""};
-																String nomParams[] = {""};
-																tds.setArg_Loc(idf);
-																RESULT = n; :}
+ PG parametres:p PD block:b 							{:  Noeud n = new Noeud(Noeud.FONCTION, idf);
+															n.ajouterNoeud(b);
+															String typeParams[] = {""};
+															String nomParams[] = {""};
+															tds.setArg_Loc(idf);
+															RESULT = n; :}
 		   | IDF:idf {: tds.insertion(idf,0,"void");:}
 
- PG parametres:p PD block:b {: Noeud n = new Noeud(Noeud.FONCTION, idf);
-																n.ajouterNoeud(b);
-																String typeParams[] = {""};
-																String nomParams[] = {""};
-																tds.setArg_Loc(idf);
-																RESULT = n; :}
+ PG parametres:p PD block:b 							{:  Noeud n = new Noeud(Noeud.FONCTION, idf);
+															n.ajouterNoeud(b);
+															String typeParams[] = {""};
+															String nomParams[] = {""};
+															tds.setArg_Loc(idf);
+															RESULT = n; :}
 		   ;
 
-typeFonction ::= INT									{: RESULT = "int"; :}
-			   | VOID									{: RESULT = "void"; :}
-			   ;
 
 block ::= AG contenuBlock:cb AD							{:	tds.scopeCourant=0;
 															RESULT = cb; :} 
 		;
 
-contenuBlock ::= contenuBlock:cb instruction:i			{: if(i.getType()!=Noeud.DECLARATION) {
+contenuBlock ::= contenuBlock:cb instruction:i			{: if(i!=null) {
 														   	cb.add(0,i);
 														   }
 														   RESULT = cb; :}
 			   | /* VIDE */  							{: RESULT = new ArrayList<Noeud>(); :}
 			   ;
 
-instruction ::= affectation:af							{: RESULT = af; :}
-			  | data:da									{: Noeud n = new Noeud(Noeud.DECLARATION);
-			  											   if(da.getFils().size()>0) {
-			  											   		n = da.getFils().get(0);
-			  											   }
-			  											   RESULT = n; :}
+instruction ::= type:t IDF:idf {: type = t; :} toto POINTVIRGULE	{: tds.insertion(idf,tds.scopeCourant,t,"0",tds.rang_loc++); :}
+			  | type:t IDF:idf EGAL expression:e POINTVIRGULE		{: tds.insertion(idf,tds.scopeCourant,t,"0",tds.rang_loc++);
+														   			   Noeud n = new Noeud(Noeud.AFFECTATION);
+														   			   Noeud nIDF = new Noeud(Noeud.IDF, Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)));
+															   		   n.ajouterFG(nIDF);
+															  		   n.ajouterFD(e);
+															   		   tds.existeDansTds(idf,tds.scopeCourant);
+														   RESULT = n; :}
+			  | affectation:af							{: RESULT = af; :}
 			  | instrReturn:re							{: RESULT = re; :}
 			  | call:ca									{: RESULT = ca; :}
 			  | condition:co							{: RESULT = co; :}
 			  | iteration:it							{: RESULT =  it; :}
 			  ;
+
+toto ::= VIRGULE IDF:idf toto 							{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++); :}
+       | /*vide*/
+       ;
  
 condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
@@ -292,6 +293,7 @@ argument ::= type:t IDF:idf								{: Noeud n = new Noeud(Noeud.IDF, "[" + tds.s
 		   ;
 			
 type ::= INT											{: RESULT = "int"; :}
+	   | VOID											{: RESULT = "void"; :}
 	   ;
 
 op_secondaire ::= PLUS									{: RESULT = Noeud.PLUS; :}
@@ -309,4 +311,3 @@ operateurBooleen ::= PPQ								{: RESULT = Noeud.PPQ; :}
 				   ;
 
 /*------fin--------*/
-
