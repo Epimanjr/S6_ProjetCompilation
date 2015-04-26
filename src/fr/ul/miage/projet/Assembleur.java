@@ -76,10 +76,26 @@ public class Assembleur {
 		}
 
 	}
- 	//test si c'est un opérateur
+ 	
+    /**
+     * Test si c'est un opérateur de calcul
+     *
+     * @param str Valeur du Noeud
+     * @return boolean vrai ou faux
+     */
  	public boolean estOperateur(String str){
         return str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/");
  	}
+
+    /**
+     * Test si c'est un opérateur de calcul
+     *
+     * @param str Valeur du Noeud
+     * @return boolean vrai ou faux
+     */
+    public boolean estOperateurBool(String str){
+        return str.equals("<") || str.equals("<=") || str.equals(">=") || str.equals(">") || str.equals("==");
+    }
 
     /**
      * Génération du code assembleur pour tout le programme.
@@ -328,18 +344,11 @@ public class Assembleur {
 	                + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n"
 	    			+ "\tPUSH(r3)\n";
 	    	}
+
+            if(estOperateurBool(noeud.getType())) {
+                //TODO
+            }
     	}
-    }
-    
-   
-    /**
-     * Génération d'une expression operateur.
-     *
-     * @param noeud Noeud
-     */
-    public void generer_expression_operateur(Noeud fils) {
-        // Génération de l'expression du fils DROIT
-    	
     }
 
 
