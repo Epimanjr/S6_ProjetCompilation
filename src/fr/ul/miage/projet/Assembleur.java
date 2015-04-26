@@ -114,7 +114,8 @@ public class Assembleur {
             Variable var = (Variable) it.next();
             if (var.getScope() == 0) { // Si c'est une variable globale
                 // Si c'est un INT
-                if (this.tds.getTds().get(var).get("type").equals("int")) {
+                HashMap<String, String> mapTmp = this.tds.getTds().get(var);
+                if (mapTmp.get("type").equals("int") && mapTmp.containsKey("valeur")) {
                     res += "\t" + var.getIdf() + ":LONG(" + this.tds.getTds().get(var).get("valeur") + ")\n";
                 }
             }
