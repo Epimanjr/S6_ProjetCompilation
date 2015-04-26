@@ -204,7 +204,6 @@ condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF)
 																RESULT = n; :}
 			| IF PG booleen:bool PD block:b1 ELSE block:b2	{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
-																n.ajouterFG(bool);
 																Noeud nBLOC = new Noeud(Noeud.BLOCK);
 																nBLOC.ajouterNoeud(b1);
 																n.ajouterFD(nBLOC);
@@ -216,7 +215,9 @@ condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF)
 
 iteration ::= WHILE PG booleen:bool PD block:b			{:	Noeud n = new Noeud(Noeud.WHILE);
 															n.ajouterFG(bool);
-															n.ajouterNoeud(b);
+															Noeud nBLOC = new Noeud(Noeud.BLOCK);
+															nBLOC.ajouterNoeud(b);
+															n.ajouterFD(nBLOC);
 															RESULT = n; :}
 			;
 

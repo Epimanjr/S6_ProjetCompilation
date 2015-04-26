@@ -8,6 +8,11 @@ void main(){
 	if (i < 2){
 		j = 0;
 		j = 1;
+	} else {
+		j = 2;
+	}
+	while (i < 3) {
+		j = 1 + j;
 	}
  }
 
