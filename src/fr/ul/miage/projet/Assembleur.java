@@ -187,6 +187,18 @@ public class Assembleur {
     }
 
     /**
+     * Génération du code assembleur d'un bloc
+     *
+     * @param fils Noeud
+     */
+    public void generer_bloc(Noeud fils) {
+        // Parcours des Noeuds
+        for(Noeud fils2 : fils.getFils()) {
+            generer_instruction(fils2);
+        }
+    }
+
+    /**
      * Génération du code assembleur d'une condition
      *
      * @param fils Noeud
@@ -198,12 +210,12 @@ public class Assembleur {
         generer_expression(fils.getFils().get(0));
         res += "\tPOP(r0)\n";
         res += "\tBF(r0, sinon)\n";
-        generer_instruction(fils.getFils().get(1));
+        generer_bloc(fils.getFils().get(1));
         res += "\tBR(fsi)\n";
         res += "sinon:\n";
         // Si y'a un else
         if(fils.getFils().size() == 3) {
-            generer_instruction(fils.getFils().get(2));
+            generer_bloc(fils.getFils().get(2));
         }
         // Fsi
         res += "fsi:\n";
