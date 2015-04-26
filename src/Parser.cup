@@ -198,12 +198,19 @@ toto ::= VIRGULE IDF:idf toto 							{: tds.insertion(idf,tds.scopeCourant,type,
  
 condition ::= IF PG booleen:bool PD block:b1				{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
-																n.ajouterNoeud(b1);
+																Noeud nBLOC = new Noeud(Noeud.BLOCK);
+																nBLOC.ajouterNoeud(b1);
+																n.ajouterFD(nBLOC);
 																RESULT = n; :}
 			| IF PG booleen:bool PD block:b1 ELSE block:b2	{:	Noeud n = new Noeud(Noeud.IF);
 																n.ajouterFG(bool);
-																n.ajouterNoeud(b1);
-																n.ajouterNoeud(b2);
+																n.ajouterFG(bool);
+																Noeud nBLOC = new Noeud(Noeud.BLOCK);
+																nBLOC.ajouterNoeud(b1);
+																n.ajouterFD(nBLOC);
+																Noeud nBLOC2 = new Noeud(Noeud.BLOCK);
+																nBLOC2.ajouterNoeud(b2);
+																n.ajouterFD(nBLOC2);
 																RESULT = n; :}
 			;
 
