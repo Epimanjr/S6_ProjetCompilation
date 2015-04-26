@@ -183,6 +183,9 @@ public class Assembleur {
             case "IF":
                 generer_condition(fils);
                 break;
+            case "WHILE":
+                generer_iteration(fils);
+                break;
         }
     }
 
