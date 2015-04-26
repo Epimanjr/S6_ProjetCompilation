@@ -199,6 +199,24 @@ public class Assembleur {
     }
 
     /**
+     * Génération du code assembleur d'une itération
+     *
+     * @param fils Noeud
+     */
+    public void generer_iteration(Noeud fils) {
+        // Init while
+        res += "while:\n";
+        // Génération de l'expression
+        generer_expression(fils.getFils().get(0));
+        res += "\tPOP(r0)\n";
+        res += "\tBF(r0, fwhile)\n";
+        generer_bloc(fils.getFils().get(1));
+        res += "\tBR(while)\n";
+        // fwhile
+        res += "fwhile:\n";
+    }
+
+    /**
      * Génération du code assembleur d'une condition
      *
      * @param fils Noeud
