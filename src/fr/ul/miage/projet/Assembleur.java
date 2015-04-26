@@ -180,7 +180,33 @@ public class Assembleur {
             case "CALL":
                 generer_call(fils);
                 break;
+            case "IF":
+                generer_condition(fils);
+                break;
         }
+    }
+
+    /**
+     * Génération du code assembleur d'une condition
+     *
+     * @param fils Noeud
+     */
+    public void generer_condition(Noeud fils) {
+        // Init si
+        res += "si:\n";
+        // Génération de l'expression
+        generer_expression(fils.getFils().get(0));
+        res += "\tPOP(r0)\n";
+        res += "\tBF(r0, sinon)\n";
+        generer_instruction(fils.getFils().get(1));
+        res += "\tBR(fsi)\n";
+        res += "sinon:\n";
+        // Si y'a un else
+        if(fils.getFils().size() == 3) {
+            generer_instruction(fils.getFils().get(2));
+        }
+        // Fsi
+        res += "fsi:\n";
     }
 
     /**
