@@ -320,35 +320,47 @@ public class Assembleur {
      * @param noeud Noeud
      */
     public void generer_expression(Noeud noeud) {
-        
-    	if(noeud.getType()=="CALL") {
-    		generer_call(noeud);
-    	} else {
-	        if(noeud.getValeur() != null) {
-	            if (estChiffre(noeud.getValeur())){
-	                res+= "\tCMOVE("+noeud.getValeur()+",r0)\n"
-	                    + "\tPUSH (r0)\n";
-	            }
-	            else if(estLettre(noeud.getValeur().charAt(0))){
-	                res+= "\tLD("+noeud.getValeur()+",r0)\n"
-	                    + "\tPUSH (r0)";
-	            }
-	        }
-	        
-	        if(estOperateur(noeud.getType())){	   
-	            // Génération des expressions
-	            generer_expression(noeud.getFils().get(1));
-	    		generer_expression(noeud.getFils().get(0));
-	    		res+="\tPOP(r2)\n"
-	    			+"\tPOP(r1)\n"
-	                + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n"
-	    			+ "\tPUSH(r3)\n";
-	    	}
-
-            if(estOperateurBool(noeud.getType())) {
-                //TODO
-            }
-    	}
+        // Test sur le type du Noeud
+        switch(noeud.getType()) {
+            case "CALL":
+                generer_call(noeud);
+                break;
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                // Génération des expressions
+                generer_expression(noeud.getFils().get(1));
+                generer_expression(noeud.getFils().get(0));
+                res+="\tPOP(r2)\n"
+                    +"\tPOP(r1)\n"
+                    + "\t" + mapOp.get(noeud.getType()) + "(r1, r2, r3)\n"
+                    + "\tPUSH(r3)\n";
+                break;
+            case ">":
+            case ">=":
+            case "<":
+            case "<=":
+            case "==":
+                // TODO
+                break;
+            default:
+                // Test sur la valeur
+                String tmp = "";
+                try {
+                    int nb = new Integer(noeud.getValeur());
+                    // C'est un nombre!
+                    tmp = "CMOVE";
+                } catch(NumberFormatException ex) {
+                    // Ce n'est pas un nombre!
+                    tmp = "LD";
+                } finally {
+                    res += "\t" + tmp + "(" + noeud.getValeur() + ", r0)\n"
+                         + "\tPUSH(r0)\n";
+                }
+                break;
+        }
+ 
     }
 
 
