@@ -152,10 +152,9 @@ public class Assembleur {
              + "\tMOVE(SP, BP)\n"
              + "\tALLOCATE(" + nb_var_loc + ")\n";
         // Parcours de chaque fils du Noeud
-        fils.getFils().stream().forEach((fils2) -> {
-            // Génération de l'instruction
-            generer_instruction(fils2);
-        });
+        for(int i=0;i<fils.getFils().size();i++) {
+            generer_instruction(fils.getFils().get(fils.getFils().size() - i - 1));
+        }
         // Fin de la fonction
         res += "ret_" + fils.getValeur() + ":\n"
              + "\tDEALLOCATE(" + nb_var_loc + ")\n"
