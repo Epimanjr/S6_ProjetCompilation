@@ -342,7 +342,27 @@ public class Assembleur {
             case "<":
             case "<=":
             case "==":
-                // TODO
+                generer_expression(noeud.getFils().get(0));
+                generer_expression(noeud.getFils().get(1));
+                res += "\tPOP(r1)\n"
+                    + "\tPOP(r2)\n";
+                // Test sur l'opérateur booléen
+                if(noeud.getType().equals(">")) {
+                    res += "\tCMPLT(r2, r1, r0)\n";
+                }
+                if(noeud.getType().equals(">=")) {
+                    res += "\tCMPLE(r2, r1, r0)\n";
+                }
+                if(noeud.getType().equals("<")) {
+                    res += "\tCMPLT(r1, r2, r0)\n";
+                }
+                if(noeud.getType().equals("<=")) {
+                    res += "\tCMPLE(r1, r1, r0)\n";
+                }
+                if(noeud.getType().equals("==")) {
+                    res += "\tCMPLT(r1, r2, r0)\n";
+                }
+                res += "\tPUSH(r0)\n";
                 break;
             default:
                 // Test sur la valeur
@@ -350,13 +370,18 @@ public class Assembleur {
                 try {
                     int nb = new Integer(noeud.getValeur());
                     // C'est un nombre!
-                    tmp = "CMOVE";
+                    res += "\tCMOVE(" + noeud.getValeur() + ", r0)\n";
                 } catch(NumberFormatException ex) {
                     // Ce n'est pas un nombre!
-                    tmp = "LD";
+                    // Si c'est une variable globale
+                    res += "\tLD(" + noeud.getValeur() + ", r0)\n";
+                    // Si c'est une variable locale
+
+                    // Si c'est un paramètre
+
+                    // TODO
                 } finally {
-                    res += "\t" + tmp + "(" + noeud.getValeur() + ", r0)\n"
-                         + "\tPUSH(r0)\n";
+                    res += "\tPUSH(r0)\n";
                 }
                 break;
         }
