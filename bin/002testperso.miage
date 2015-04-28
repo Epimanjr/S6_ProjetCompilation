@@ -1,6 +1,0 @@
-int j;
-int k = 0;
-void main(){
-	int i;
-	i = 1 + 1;
-}
