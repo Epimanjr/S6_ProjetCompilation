@@ -94,7 +94,7 @@ non terminal String operateurBooleen;
 non terminal Noeud condition;
 non terminal Noeud booleen;
 non terminal Noeud iteration;
-non terminal toto;
+non terminal suiteInstruction;
 
 /*precedence left INT;*/
 
@@ -177,7 +177,7 @@ contenuBlock ::= contenuBlock:cb instruction:i			{: if(i!=null) {
 			   | /* VIDE */  							{: RESULT = new ArrayList<Noeud>(); :}
 			   ;
 
-instruction ::= type:t IDF:idf {: type = t; :} toto POINTVIRGULE	{: tds.insertion(idf,tds.scopeCourant,t,"0",tds.rang_loc++); :}
+instruction ::= type:t IDF:idf {: type = t; :} suiteInstruction POINTVIRGULE	{: tds.insertion(idf,tds.scopeCourant,t,"0",tds.rang_loc++); :}
 			  | type:t IDF:idf EGAL expression:e POINTVIRGULE		{: tds.insertion(idf,tds.scopeCourant,t,"0",tds.rang_loc++);
 														   			   Noeud n = new Noeud(Noeud.AFFECTATION);
 														   			   Noeud nIDF = new Noeud(Noeud.IDF, Integer.toString(tds.indexDansTds(idf,tds.scopeCourant)));
@@ -192,7 +192,7 @@ instruction ::= type:t IDF:idf {: type = t; :} toto POINTVIRGULE	{: tds.insertio
 			  | iteration:it							{: RESULT =  it; :}
 			  ;
 
-toto ::= VIRGULE IDF:idf toto 							{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++); :}
+suiteInstruction ::= VIRGULE IDF:idf suiteInstruction 							{: tds.insertion(idf,tds.scopeCourant,type,"0",tds.rang_loc++); :}
        | /*vide*/
        ;
  
